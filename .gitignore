@@ -1,0 +1,16 @@
+node_modules
+dist
+.output
+.nitro
+.tanstack
+.vinxi
+.env
+.env.*
+*.log
+.DS_Store
+
+# Admin panel data saved locally during development
+.data
+public/uploads
+!.env.example
+.vercel
