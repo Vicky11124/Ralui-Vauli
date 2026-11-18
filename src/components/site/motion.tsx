@@ -2,6 +2,7 @@ import {
   createElement,
   useEffect,
   useRef,
+  useState,
   type CSSProperties,
   type ElementType,
   type ReactNode,
@@ -275,8 +276,8 @@ export function Marquee({ items, tone = "light" }: { items: string[]; tone?: "li
 }
 
 /**
- * A framed image that opens up to full width while its tall section is pinned on screen.
- * Children are laid over the image and fade in as it opens.
+ * A framed image that opens to full size by itself once a little of it has scrolled into view,
+ * then fades its text in. Plays once; no long scroll needed.
  */
 export function ExpandingImage({
   src,
@@ -292,9 +293,30 @@ export function ExpandingImage({
   tone?: "light" | "dark";
 }) {
   const ref = useRef<HTMLElement>(null);
-  useScrollProgress(ref, "pin");
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (prefersReducedMotion() || typeof IntersectionObserver === "undefined") {
+      setOpen(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setOpen(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section ref={ref} className={`expand expand--${tone}`}>
+    <section ref={ref} className={`expand expand--${tone}${open ? " is-open" : ""}`}>
       <div className="expand__frame">
         <div className="expand__media">
           <img src={src} alt={alt} loading="lazy" style={position ? { objectPosition: position } : undefined} />
