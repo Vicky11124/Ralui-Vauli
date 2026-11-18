@@ -106,9 +106,6 @@ export function SiteHeader() {
               <ArrowUpRight aria-hidden="true" />
             </Link>
           ))}
-          <Link className="mobile-nav__cta" to="/collections" onClick={closeMenu}>
-            Explore collections <ArrowRight aria-hidden="true" />
-          </Link>
         </nav>
       )}
 
