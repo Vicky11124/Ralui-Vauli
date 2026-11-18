@@ -11,6 +11,9 @@ export const BUSINESS = {
   name: "RALUI VALUI",
   founder: "Ralui Valui",
   category: "Premium handmade textiles, botanical eco-printing & natural dyeing",
+  phone: "+91 70459 67404",
+  phoneTel: "+917045967404",
+  whatsappNumber: "917045967404",
   offices: [
     {
       label: "Head office",
@@ -60,7 +63,7 @@ export type Piece = {
 };
 
 export type Settings = {
-  /** International format, digits only once saved, e.g. 919876543210. Empty hides WhatsApp. */
+  /** International format, digits only once saved, e.g. 917045967404. Empty hides WhatsApp. */
   whatsappNumber: string;
   whatsappMessage: string;
 };
@@ -72,7 +75,7 @@ export type SiteData = {
 };
 
 export const DEFAULT_SETTINGS: Settings = {
-  whatsappNumber: "919876543210",
+  whatsappNumber: "917045967404",
   whatsappMessage: "Hello Ralui Valui, I found you through your website and would love to know more.",
 };
 

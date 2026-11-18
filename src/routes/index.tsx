@@ -87,7 +87,7 @@ function Index() {
           </div>
         </div>
         <p className="hero__index">
-          01 <span /> Handmade in Ukhrul & Dimapur
+          <span /> Handmade in Ukhrul & Dimapur
         </p>
         <a className="hero__scroll" href="#collections" aria-label="Scroll to collections">
           <ArrowDown aria-hidden="true" />
@@ -120,9 +120,7 @@ function Index() {
                     </span>
                   </div>
                   <div className="collection-item__caption">
-                    <span>
-                      0{index + 1} / {piece.title}
-                    </span>
+                    <span>{piece.title}</span>
                     <span>{categoryLabel(piece.category)}</span>
                   </div>
                 </Link>
@@ -173,7 +171,7 @@ function Index() {
           <Reveal as="p" className="eyebrow" variant="fade">
             <span className="eyebrow__line" /> From leaf to cloth
           </Reveal>
-          <span className="art-section__number">THE PROCESS / 01—03</span>
+          <span className="art-section__number">THE PROCESS</span>
         </div>
         <h2 id="art-title" className="split-lines">
           <Reveal as="span" variant="mask" className="split-lines__mask">
@@ -190,7 +188,6 @@ function Index() {
             ["Dyed", "Natural colour deepens the piece, finishing a print that can never be repeated."],
           ].map(([title, text], index) => (
             <Reveal as="article" className="art-step" key={title} delay={index * 120}>
-              <span>0{index + 1}</span>
               <h3>{title}</h3>
               <p>{text}</p>
             </Reveal>

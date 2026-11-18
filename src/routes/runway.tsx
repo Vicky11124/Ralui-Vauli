@@ -51,7 +51,7 @@ function RunwayPage() {
   return (
     <SitePage className="page--dark">
       <PageHero
-        index="05 — Runway"
+        index="Runway"
         eyebrow="Limited-edition wearable art"
         title={["A living", <em key="em">collection.</em>]}
         description="Botanical eco-prints and natural dyes on flowing natural fibres. See how each print comes alive when it is worn."
@@ -91,7 +91,6 @@ function RunwayPage() {
                 strength={look.strength}
               />
               <figcaption>
-                <span>{look.number}</span>
                 <strong>{look.name}</strong>
                 <p>{look.detail}</p>
               </figcaption>

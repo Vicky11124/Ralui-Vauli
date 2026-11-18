@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { ArrowRight, ArrowUpRight, Check, Gem, Handshake, Instagram, MapPin, MessageCircle, Plus } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, Gem, Handshake, Instagram, MapPin, MessageCircle, Phone, Plus } from "lucide-react";
 
 import textileImage from "@/assets/eco-art-textile.jpg";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
@@ -70,6 +70,7 @@ const faqs = [
 ];
 
 function ContactPage() {
+  const { settings } = useSiteData();
   const [topic, setTopic] = useState<TopicId>("custom");
 
   const chooseTopic = (id: TopicId) => {
@@ -80,7 +81,7 @@ function ContactPage() {
   return (
     <SitePage>
       <PageHero
-        index="06 — Contact"
+        index="Contact"
         eyebrow="Get in touch"
         title={["Wear what", <em key="em">the earth remembers.</em>]}
         description="For custom pieces, collaborations and enquiries about any piece in the collection. We'd love to hear from you."
@@ -110,7 +111,6 @@ function ContactPage() {
                 aria-pressed={topic === item.id}
               >
                 <item.icon aria-hidden="true" />
-                <span className="topic-card__number">0{index + 1}</span>
                 <h3>{item.title}</h3>
                 <p>{item.text}</p>
                 <span className="topic-card__cta">
@@ -142,6 +142,17 @@ function ContactPage() {
             </Reveal>
           ))}
           <Reveal className="visit__card" delay={240}>
+            <Phone aria-hidden="true" />
+            <h3>Phone & WhatsApp</h3>
+            <p>For custom commissions, sizing, or direct enquiries, call or message us directly.</p>
+            <a className="text-link" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer">
+              WhatsApp {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
+            </a>
+            <a className="text-link" href={`tel:${BUSINESS.phoneTel}`}>
+              Call {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
+            </a>
+          </Reveal>
+          <Reveal className="visit__card" delay={360}>
             <Instagram aria-hidden="true" />
             <h3>Instagram</h3>
             <p>New pieces and works in progress are shared first on Instagram.</p>
@@ -223,7 +234,13 @@ function Composer({ topic, onTopicChange }: { topic: TopicId; onTopicChange: (id
               ? "Your note opens in a WhatsApp chat with us, already typed out — just press send."
               : `We reply through Instagram. We'll copy your note and open a direct message to ${BUSINESS.instagramHandle} — just paste and send.`}
           </Reveal>
-          <Reveal delay={220}>
+          <Reveal delay={220} className="composer__intro-links">
+            <a className="text-link text-link--ivory" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer">
+              <MessageCircle aria-hidden="true" /> WhatsApp: {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
+            </a>
+            <a className="text-link text-link--ivory" href={`tel:${BUSINESS.phoneTel}`}>
+              <Phone aria-hidden="true" /> Call: {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
+            </a>
             <a className="text-link text-link--ivory" href={BUSINESS.instagramUrl} target="_blank" rel="noreferrer">
               <Instagram aria-hidden="true" /> Visit our Instagram <ArrowUpRight aria-hidden="true" />
             </a>

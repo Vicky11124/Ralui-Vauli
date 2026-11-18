@@ -319,7 +319,7 @@
 .contact .eyebrow { justify-content: center; }
 .contact h2 { margin-top: 1.4rem; font-size: clamp(3.4rem, 6.5vw, 6.6rem); }
 .contact__text { max-width: 26rem; margin: 1.35rem 0 0; color: var(--color-muted-foreground); font-size: 0.86rem; line-height: 1.8; }
-.contact__button { min-height: 47px; margin-top: 1.7rem; padding-inline: 1.15rem; border-radius: 0; color: var(--color-primary-foreground); background: var(--color-primary); font-size: 0.68rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
+.contact__button { display: inline-flex; height: 48px; min-height: 48px; margin: 0; padding: 0 1.25rem; border-radius: 0; color: var(--color-primary-foreground); background: var(--color-primary); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; line-height: 1; vertical-align: middle; }
 .contact__button:hover { background: var(--olive-ink); }
 .contact__button svg { width: 0.95rem; height: 0.95rem; }
 
@@ -451,7 +451,7 @@ html.js .reveal--mask:not(.is-visible) .split-lines__line { transform: translate
 .art-section__foot { flex-wrap: wrap; }
 .art-section__more { margin: 0 0 0 auto; font-family: var(--font-sans); font-style: normal; }
 .contact .section-heading { margin-bottom: 0; }
-.contact__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.2rem 2rem; margin-top: 0.5rem; }
+.contact__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem 1.25rem; margin-top: 2rem; }
 .contact__actions .text-link svg { width: 1rem; height: 1rem; }
 .collection-cell { min-width: 0; }
 
@@ -610,7 +610,7 @@ html.js .reveal--mask:not(.is-visible) .split-lines__line { transform: translate
 .values__sticky .section-heading { margin-bottom: 1.4rem; }
 .values__intro { max-width: 22rem; margin: 0; color: var(--color-muted-foreground); font-size: 0.9rem; line-height: 1.85; }
 .values__list { margin: 0; padding: 0; list-style: none; }
-.value { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; padding: 2.6rem 0; border-top: 1px solid var(--color-border); }
+.value { display: block; padding: 2.6rem 0; border-top: 1px solid var(--color-border); }
 .value:last-child { border-bottom: 1px solid var(--color-border); }
 .value__number { color: var(--warm-earth); font-family: var(--font-editorial); font-size: 2.6rem; line-height: 1; transition: transform 400ms var(--ease-out); }
 .value:hover .value__number { transform: translateX(6px); }
@@ -909,7 +909,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .whatsapp-fab:hover .whatsapp-fab__label, .whatsapp-fab:focus-visible .whatsapp-fab__label { max-width: 8rem; opacity: 1; }
 @keyframes fab-in { from { opacity: 0; transform: translateY(1rem) scale(0.9); } to { opacity: 1; transform: none; } }
 
-.whatsapp-button { display: inline-flex; min-height: 48px; align-items: center; gap: 0.6rem; padding: 0 1.2rem; color: #fff; background: #1f8f4e; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; text-decoration: none; transition: background-color 250ms ease; }
+.whatsapp-button { display: inline-flex; height: 48px; min-height: 48px; margin: 0; align-items: center; gap: 0.6rem; padding: 0 1.25rem; color: #fff; background: #1f8f4e; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; line-height: 1; text-decoration: none; transition: background-color 250ms ease; }
 .whatsapp-button:hover { background: #187a42; }
 .whatsapp-button svg { width: 1rem; height: 1rem; }
 
@@ -953,12 +953,14 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .maker__place { display: inline-flex; align-items: center; gap: 0.55rem; margin-top: 2.2rem; color: var(--color-primary); font-family: var(--font-editorial); font-size: 1.35rem; font-style: italic; text-decoration: none; }
 .maker__place svg { width: 1.1rem; height: 1.1rem; color: var(--warm-earth); }
 .visit { max-width: 100rem; margin: 0 auto; padding-bottom: 2rem; }
-.visit__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.visit__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
 .visit__card { display: flex; flex-direction: column; align-items: flex-start; padding: 2.4rem 2rem; border: 1px solid var(--color-border); background: var(--soft-ivory); }
 .visit__card > svg { width: 1.5rem; height: 1.5rem; color: var(--color-primary); stroke-width: 1.4; }
 .visit__card h3 { margin: 1.4rem 0 0; font-family: var(--font-editorial); font-size: 1.9rem; font-weight: 500; }
 .visit__card address, .visit__card p { display: flex; flex-direction: column; margin: 0.7rem 0 0; color: var(--color-muted-foreground); font-size: 0.9rem; font-style: normal; line-height: 1.8; }
 .visit__card .text-link { margin-top: auto; padding-top: 1.4rem; }
+.visit__card .text-link + .text-link { margin-top: 0.5rem; padding-top: 0; }
+.composer__intro-links { display: flex; flex-direction: column; gap: 0.7rem; }
 .composer__submit--whatsapp { color: #fff; background: #1f8f4e; }
 .composer__submit--whatsapp:hover { background: #187a42; }
 

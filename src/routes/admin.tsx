@@ -678,7 +678,7 @@ function SettingsForm({ site, onApplied, onFailed }: { site: SiteData } & Handle
       <form className="admin-panel" onSubmit={save}>
         <label className="admin-field">
           <span>WhatsApp number (with country code)</span>
-          <input value={number} onChange={(e) => setNumber(e.target.value)} inputMode="tel" placeholder="e.g. 91 98765 43210" />
+          <input value={number} onChange={(e) => setNumber(e.target.value)} inputMode="tel" placeholder="e.g. 91 70459 67404" />
         </label>
         <label className="admin-field">
           <span>Greeting visitors start with</span>

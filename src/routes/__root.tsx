@@ -12,7 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { getSiteData } from "../lib/api";
+import { getSiteData, getSiteOrigin } from "../lib/api";
 
 function NotFoundComponent() {
   return (
@@ -75,8 +75,24 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
+  head: ({ loaderData, matches }) => {
+    // One canonical URL per page: the production address + the path, without ?filters.
+    const origin = loaderData?.origin ?? "";
+    const path = matches[matches.length - 1]?.pathname ?? "/";
+    const canonical = origin ? `${origin}${path === "/" ? "/" : path.replace(/\/+$/, "")}` : undefined;
+    const shareImage = origin ? `${origin}/og-image.jpg` : undefined;
+    return {
     meta: [
+      ...(canonical ? [{ property: "og:url", content: canonical }] : []),
+      ...(shareImage
+        ? [
+            { property: "og:image", content: shareImage },
+            { property: "og:image:width", content: "1200" },
+            { property: "og:image:height", content: "630" },
+            { name: "twitter:image", content: shareImage },
+          ]
+        : []),
+      ...(loaderData && !loaderData.indexable ? [{ name: "robots", content: "noindex, nofollow" }] : []),
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "RALUI VALUI — Botanical Eco-Printing & Natural Dyeing" },
@@ -106,12 +122,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
+      ...(canonical ? [{ rel: "canonical", href: canonical }] : []),
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
-  }),
+    };
+  },
   // Collection pieces + settings (WhatsApp number) are editable in /admin; every page reads them here.
-  loader: () => getSiteData(),
+  loader: async () => {
+    const [site, seo] = await Promise.all([getSiteData(), getSiteOrigin()]);
+    return { ...site, ...seo };
+  },
   staleTime: 30_000,
   shellComponent: RootShell,
   component: RootComponent,

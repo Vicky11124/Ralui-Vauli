@@ -105,7 +105,7 @@ function CollectionsPage() {
   return (
     <SitePage>
       <PageHero
-        index="02 — Collections"
+        index="Collections"
         eyebrow="Wearable botanical art"
         title={["Made by nature.", <em key="em">Made to be yours.</em>]}
         description="Botanical eco-printed clothing, silk scarves, naturally dyed shawls, exclusive textiles and limited-edition wearable art — all on natural fibres."
@@ -132,7 +132,6 @@ function CollectionsPage() {
           {promises.map((item, index) => (
             <Reveal as="article" className="promise__card" key={item.title} delay={index * 120}>
               <item.icon aria-hidden="true" />
-              <span className="promise__number">0{index + 1}</span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
             </Reveal>
@@ -324,7 +323,7 @@ function Chapters() {
         <div className="chapters__media" aria-hidden="true">
           {chapters.map((chapter, index) => (
             <img
-              key={chapter.number}
+              key={chapter.name}
               src={chapter.image}
               alt=""
               loading="lazy"
@@ -332,14 +331,11 @@ function Chapters() {
               style={{ objectPosition: chapter.position }}
             />
           ))}
-          <div className="chapters__counter">
-            <span>{chapters[active]?.number}</span> / 0{chapters.length}
-          </div>
         </div>
         <div className="chapters__list">
           {chapters.map((chapter, index) => (
             <article
-              key={chapter.number}
+              key={chapter.name}
               ref={(el) => {
                 refs.current[index] = el;
               }}
@@ -347,7 +343,6 @@ function Chapters() {
               className={`chapter${index === active ? " is-active" : ""}`}
             >
               <img className="chapter__mobile-image" src={chapter.image} alt={chapter.alt} loading="lazy" style={{ objectPosition: chapter.position }} />
-              <span className="chapter__number">{chapter.number}</span>
               <p className="chapter__kind">{chapter.kind}</p>
               <h3>{chapter.name}</h3>
               <p className="chapter__text">{chapter.text}</p>

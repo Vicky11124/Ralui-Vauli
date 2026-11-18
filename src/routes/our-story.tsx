@@ -4,8 +4,9 @@ import { ArrowRight, MapPin } from "lucide-react";
 import heroImage from "@/assets/eco-art-hero.jpg";
 import textileImage from "@/assets/eco-art-textile.jpg";
 import processImage from "@/assets/eco-art-process.jpg";
+import founderImage from "@/assets/founder.jpg";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
-import { Marquee, ParallaxImage, Reveal, ScrollText } from "@/components/site/motion";
+import { Marquee, ParallaxImage, Reveal } from "@/components/site/motion";
 import { BUSINESS } from "@/lib/site-data";
 
 export const Route = createFileRoute("/our-story")({
@@ -46,7 +47,7 @@ function StoryPage() {
   return (
     <SitePage>
       <PageHero
-        index="03 — Our story"
+        index="Our story"
         eyebrow="The heart of RALUI VALUI"
         title={["Fashion,", <>rooted in <em>nature.</em></>]}
         description="A nature-inspired textile and clothing brand from Ukhrul and Dimapur — specialising in botanical eco-printing, natural dyeing and handcrafted wearable art."
@@ -55,24 +56,17 @@ function StoryPage() {
         imageWidth={1024}
         imageHeight={1280}
         imagePosition="center 58%"
-        scrollTarget="#beginning"
+        scrollTarget="#maker"
       />
 
-      <section className="statement section-wrap" id="beginning">
-        <Reveal as="p" className="eyebrow statement__eyebrow" variant="fade">
-          <span className="eyebrow__line" /> Where it begins
-        </Reveal>
-        <ScrollText text="RALUI VALUI brings together the beauty of nature and the art of textile craftsmanship — using leaves, flowers and natural colours to create distinctive patterns and one-of-a-kind pieces." />
-      </section>
-
-      <section className="maker" aria-labelledby="maker-title">
+      <section className="maker" id="maker" aria-labelledby="maker-title">
         <Reveal variant="clip" className="maker__image">
           <ParallaxImage
-            src={processImage}
-            alt="Ralui Valui laying leaves onto cloth, with bowls of botanicals nearby"
-            width={1024}
-            height={1280}
-            position="center 55%"
+            src={founderImage}
+            alt="Ralui Valui, founder of RALUI VALUI"
+            width={768}
+            height={1024}
+            position="center 20%"
             strength={14}
           />
         </Reveal>
@@ -108,7 +102,6 @@ function StoryPage() {
         <ol className="values__list">
           {values.map((value, index) => (
             <Reveal as="li" className="value" key={value.title} delay={index * 60}>
-              <span className="value__number">0{index + 1}</span>
               <div>
                 <h3>{value.title}</h3>
                 <p>{value.text}</p>

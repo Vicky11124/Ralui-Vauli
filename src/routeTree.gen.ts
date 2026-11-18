@@ -14,7 +14,9 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CollectionsRouteImport } from './routes/collections'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as RunwayRouteImport } from './routes/runway'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TheArtRouteImport } from './routes/the-art'
 
 const IndexRoute = IndexRouteImport.update({
@@ -42,9 +44,19 @@ const OurStoryRoute = OurStoryRouteImport.update({
   path: '/our-story',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RunwayRoute = RunwayRouteImport.update({
   id: '/runway',
   path: '/runway',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TheArtRoute = TheArtRouteImport.update({
@@ -59,7 +71,9 @@ export interface FileRoutesByFullPath {
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
   '/our-story': typeof OurStoryRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/runway': typeof RunwayRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/the-art': typeof TheArtRoute
 }
 export interface FileRoutesByTo {
@@ -68,7 +82,9 @@ export interface FileRoutesByTo {
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
   '/our-story': typeof OurStoryRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/runway': typeof RunwayRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/the-art': typeof TheArtRoute
 }
 export interface FileRoutesById {
@@ -78,7 +94,9 @@ export interface FileRoutesById {
   '/collections': typeof CollectionsRoute
   '/contact': typeof ContactRoute
   '/our-story': typeof OurStoryRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/runway': typeof RunwayRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/the-art': typeof TheArtRoute
 }
 export interface FileRouteTypes {
@@ -89,7 +107,9 @@ export interface FileRouteTypes {
     | '/collections'
     | '/contact'
     | '/our-story'
+    | '/robots.txt'
     | '/runway'
+    | '/sitemap.xml'
     | '/the-art'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -98,7 +118,9 @@ export interface FileRouteTypes {
     | '/collections'
     | '/contact'
     | '/our-story'
+    | '/robots.txt'
     | '/runway'
+    | '/sitemap.xml'
     | '/the-art'
   id:
     | '__root__'
@@ -107,7 +129,9 @@ export interface FileRouteTypes {
     | '/collections'
     | '/contact'
     | '/our-story'
+    | '/robots.txt'
     | '/runway'
+    | '/sitemap.xml'
     | '/the-art'
   fileRoutesById: FileRoutesById
 }
@@ -117,7 +141,9 @@ export interface RootRouteChildren {
   CollectionsRoute: typeof CollectionsRoute
   ContactRoute: typeof ContactRoute
   OurStoryRoute: typeof OurStoryRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   RunwayRoute: typeof RunwayRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TheArtRoute: typeof TheArtRoute
 }
 
@@ -158,11 +184,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OurStoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/runway': {
       id: '/runway'
       path: '/runway'
       fullPath: '/runway'
       preLoaderRoute: typeof RunwayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/the-art': {
@@ -181,7 +221,9 @@ const rootRouteChildren: RootRouteChildren = {
   CollectionsRoute: CollectionsRoute,
   ContactRoute: ContactRoute,
   OurStoryRoute: OurStoryRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   RunwayRoute: RunwayRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TheArtRoute: TheArtRoute,
 }
 export const routeTree = rootRouteImport

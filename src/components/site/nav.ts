@@ -20,10 +20,10 @@ export type SitePage = {
 
 export const sitePages: SitePage[] = [
   { label: "Home", to: "/", teaser: "Where nature becomes wearable art", image: heroImage },
-  { label: "Collections", to: "/collections", teaser: "Made by nature, made to be yours", image: heroImage },
   { label: "Our story", to: "/our-story", teaser: "Rooted in nature, made by hand", image: processImage },
   { label: "The art", to: "/the-art", teaser: "Eco-printing & natural dyeing", image: textileImage },
   { label: "Runway", to: "/runway", teaser: "A living collection", image: runwayImage },
+  { label: "Collections", to: "/collections", teaser: "Made by nature, made to be yours", image: heroImage },
   { label: "Contact", to: "/contact", teaser: "Wear what the earth remembers", image: textileImage },
 ];
 

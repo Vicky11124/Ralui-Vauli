@@ -79,7 +79,7 @@ function ArtPage() {
   return (
     <SitePage>
       <PageHero
-        index="04 — The art"
+        index="The art"
         eyebrow="From leaf to cloth"
         title={["No two leaves.", <em key="em">No two stories.</em>]}
         description="Botanical eco-printing and natural dyeing — a conversation between plant, natural fibre and heat. Here is how a leaf becomes a print."
@@ -94,7 +94,7 @@ function ArtPage() {
       <section className="process section-wrap" id="process" aria-labelledby="process-title">
         <SectionHeading
           id="process-title"
-          eyebrow="The process / 01—05"
+          eyebrow="The process"
           lines={["Five slow steps,", <em key="em">by hand.</em>]}
           note="Every piece moves through the same patient process. Scroll through it, one stage at a time."
         />
@@ -102,7 +102,6 @@ function ArtPage() {
           {steps.map((step, index) => (
             <article className="process-card" key={step.title} style={{ "--i": index } as CSSProperties}>
               <div className="process-card__copy">
-                <span className="process-card__number">0{index + 1}</span>
                 <h3>{step.title}</h3>
                 <p>{step.text}</p>
                 <span className="process-card__count">Step {index + 1} of {steps.length}</span>
@@ -150,7 +149,6 @@ function ArtPage() {
           <div className="variables__grid">
             {variables.map((item, index) => (
               <Reveal as="article" className="variable" key={item.label} delay={index * 120}>
-                <span>0{index + 1}</span>
                 <h3>{item.label}</h3>
                 <p>{item.text}</p>
               </Reveal>

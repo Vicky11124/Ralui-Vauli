@@ -11,6 +11,19 @@ const ALLOWED_TYPES = ["image/webp", "image/jpeg", "image/png"];
 
 /* ---------------------------------------------------------------- public ---------------------- */
 
+/** Public site address for canonical / Open Graph URLs. */
+export const getSiteOrigin = createServerFn({ method: "GET" }).handler(async () => {
+  const { siteOrigin, isIndexable } = await import("@/server/site-url");
+  const { getRequest } = await import("@tanstack/react-start/server");
+  let request: Request | undefined;
+  try {
+    request = getRequest();
+  } catch {
+    request = undefined;
+  }
+  return { origin: siteOrigin(request), indexable: isIndexable() };
+});
+
 export const getSiteData = createServerFn({ method: "GET" }).handler(async (): Promise<SiteData> => {
   const { readSiteData } = await import("@/server/storage");
   return readSiteData();
@@ -160,7 +173,7 @@ export const saveSettings = createServerFn({ method: "POST" })
   .validator((input: { whatsappNumber: string; whatsappMessage: string }) => {
     const digits = String(input?.whatsappNumber ?? "").replace(/\D/g, "");
     if (digits && (digits.length < 10 || digits.length > 15)) {
-      throw new Error("Enter the WhatsApp number with country code, e.g. 91 98765 43210.");
+      throw new Error("Enter the WhatsApp number with country code, e.g. 91 70459 67404.");
     }
     return { whatsappNumber: digits, whatsappMessage: String(input?.whatsappMessage ?? "").trim().slice(0, 300) };
   })

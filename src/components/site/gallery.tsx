@@ -69,7 +69,6 @@ export function HorizontalGallery({ items, intro }: { items: GalleryItem[]; intr
                 />
               </div>
               <figcaption>
-                <span>{String(index + 1).padStart(2, "0")}</span>
                 <strong>{item.title}</strong>
                 <em>{item.note}</em>
               </figcaption>

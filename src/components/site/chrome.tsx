@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, Instagram, MapPin, Menu, MessageCircle, X } from "lucide-react";
+import { ArrowDown, ArrowRight, ArrowUp, ArrowUpRight, Instagram, MapPin, Menu, MessageCircle, Phone, X } from "lucide-react";
 
 import logoIvory from "@/assets/logo-ivory.png";
 import logoOlive from "@/assets/logo-olive.png";
@@ -102,9 +102,7 @@ export function SiteHeader() {
               activeProps={{ className: "is-active", "aria-current": "page" }}
               style={{ "--item": index } as CSSProperties}
             >
-              <span>
-                <small>0{index + 1}</small> {page.label}
-              </span>
+              <span>{page.label}</span>
               <ArrowUpRight aria-hidden="true" />
             </Link>
           ))}
@@ -165,10 +163,14 @@ export function SiteFooter() {
           </a>
           {whatsapp && (
             <a className="footer-instagram" href={whatsapp} target="_blank" rel="noreferrer">
-              <MessageCircle aria-hidden="true" /> <span>Chat on WhatsApp</span>
+              <MessageCircle aria-hidden="true" /> <span>WhatsApp: {BUSINESS.phone}</span>
               <ArrowUpRight aria-hidden="true" />
             </a>
           )}
+          <a className="footer-instagram" href={`tel:${BUSINESS.phoneTel}`}>
+            <Phone aria-hidden="true" /> <span>Call: {BUSINESS.phone}</span>
+            <ArrowUpRight aria-hidden="true" />
+          </a>
           <button
             type="button"
             className="back-to-top"
