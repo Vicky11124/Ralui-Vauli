@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, Feather, Leaf, MessageCircle, Sparkles } from "l
 
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
 import { Reveal } from "@/components/site/motion";
-import { useSiteData } from "@/components/site/use-site";
+import { trackLead, useSiteData } from "@/components/site/use-site";
 import { photo } from "@/lib/photos";
 import { BUSINESS, CATEGORIES, categoryLabel, isCategory, whatsappLink, type CategoryId, type Piece } from "@/lib/site-data";
 
@@ -293,6 +293,7 @@ function PieceCard({ piece, index, enquire }: { piece: Piece; index: number; enq
         <a
           className="piece-card__cta"
           href={enquire ?? BUSINESS.instagramDmUrl}
+          onClick={() => enquire && trackLead({ source: "piece", piece: { id: piece.id, title: piece.title } })}
           target="_blank"
           rel="noreferrer"
         >

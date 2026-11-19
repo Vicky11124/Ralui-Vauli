@@ -4,7 +4,16 @@
  */
 import { createServerFn } from "@tanstack/react-start";
 
-import { isCategory, type Piece, type SiteData } from "./site-data";
+import {
+  isCategory,
+  isLookbookSet,
+  LEAD_SOURCES,
+  type Lead,
+  type LeadSource,
+  type LookbookPhoto,
+  type Piece,
+  type SiteData,
+} from "./site-data";
 
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // Vercel functions accept bodies up to ~4.5 MB
 const ALLOWED_TYPES = ["image/webp", "image/jpeg", "image/png"];
@@ -185,4 +194,185 @@ export const saveSettings = createServerFn({ method: "POST" })
     site.settings = { ...site.settings, ...data };
     await writeSiteData(site);
     return site;
+  });
+
+/** Move a piece to another category without opening the full editor. */
+export const setPieceCategory = createServerFn({ method: "POST" })
+  .validator((input: { id: string; category: string }) => {
+    if (typeof input?.id !== "string" || !isCategory(input.category)) throw new Error("Choose a category.");
+    return { id: input.id, category: input.category };
+  })
+  .handler(async ({ data }): Promise<SiteData> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { readSiteData, writeSiteData } = await import("@/server/storage");
+    requireAdmin();
+    const site = await readSiteData();
+    site.pieces = site.pieces.map((p) => (p.id === data.id ? { ...p, category: data.category } : p));
+    await writeSiteData(site);
+    return site;
+  });
+
+/* ---------------------------------------------------------------- runway lookbook ------------- */
+
+/** Add one optimised photo to a lookbook set (newest first within the lookbook). */
+export const addLookbookPhoto = createServerFn({ method: "POST" })
+  .validator((form: FormData) => {
+    if (!(form instanceof FormData)) throw new Error("Invalid form.");
+    return form;
+  })
+  .handler(async ({ data: form }): Promise<SiteData> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { readSiteData, writeSiteData, saveImage } = await import("@/server/storage");
+    requireAdmin();
+    const set = text(form, "set", 40);
+    if (!isLookbookSet(set)) throw new Error("Choose which set this photo belongs to.");
+    const file = form.get("image");
+    if (!(file instanceof File) || file.size === 0) throw new Error("Add a photo.");
+    if (!ALLOWED_TYPES.includes(file.type)) throw new Error("Unsupported image format.");
+    if (file.size > MAX_IMAGE_BYTES) throw new Error("Image is still too large after optimising (max 4 MB).");
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    if (!looksLikeImage(bytes, file.type)) throw new Error("That file isn't a valid image.");
+
+    const site = await readSiteData();
+    const photo: LookbookPhoto = {
+      id: `look-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+      set,
+      image: await saveImage(bytes, file.type, `runway-${set}`),
+      width: Math.max(1, Math.round(Number(form.get("width")) || 0)),
+      height: Math.max(1, Math.round(Number(form.get("height")) || 0)),
+      alt: text(form, "alt", 160) || "Runway look",
+      createdAt: new Date().toISOString(),
+    };
+    site.lookbook = [photo, ...site.lookbook];
+    await writeSiteData(site);
+    return site;
+  });
+
+export const setLookbookPhotoSet = createServerFn({ method: "POST" })
+  .validator((input: { id: string; set: string }) => {
+    if (typeof input?.id !== "string" || !isLookbookSet(input.set)) throw new Error("Choose a set.");
+    return { id: input.id, set: input.set };
+  })
+  .handler(async ({ data }): Promise<SiteData> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { readSiteData, writeSiteData } = await import("@/server/storage");
+    requireAdmin();
+    const site = await readSiteData();
+    site.lookbook = site.lookbook.map((p) => (p.id === data.id ? { ...p, set: data.set } : p));
+    await writeSiteData(site);
+    return site;
+  });
+
+export const deleteLookbookPhoto = createServerFn({ method: "POST" })
+  .validator((input: { id: string }) => {
+    if (typeof input?.id !== "string") throw new Error("Missing photo.");
+    return input;
+  })
+  .handler(async ({ data }): Promise<SiteData> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { readSiteData, writeSiteData, removeImage } = await import("@/server/storage");
+    requireAdmin();
+    const site = await readSiteData();
+    const photo = site.lookbook.find((p) => p.id === data.id);
+    if (!photo) return site;
+    site.lookbook = site.lookbook.filter((p) => p.id !== data.id);
+    await writeSiteData(site);
+    await removeImage(photo.image);
+    return site;
+  });
+
+/* ---------------------------------------------------------------- leads ----------------------- */
+
+const clip = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+
+type LeadInput = {
+  source: LeadSource;
+  page?: string;
+  name?: string;
+  phone?: string;
+  topic?: string;
+  message?: string;
+  piece?: { id: string; title: string };
+  /** Honeypot: real visitors never fill this. */
+  website?: string;
+};
+
+/**
+ * Public: records an enquiry the moment a visitor heads to WhatsApp from the site. Never fails
+ * for the visitor — a problem saving must not stop them reaching WhatsApp.
+ */
+export const logLead = createServerFn({ method: "POST" })
+  .validator((input: LeadInput) => {
+    if (!input || !(input.source in LEAD_SOURCES)) throw new Error("Invalid lead.");
+    return input;
+  })
+  .handler(async ({ data }) => {
+    if (data.website) return { ok: true }; // a bot filled the hidden field
+    try {
+      const { saveLead } = await import("@/server/storage");
+      const name = clip(data.name, 80);
+      const phone = clip(data.phone, 30);
+      const topic = clip(data.topic, 80);
+      const message = clip(data.message, 1500);
+      const lead: Lead = {
+        id: Math.random().toString(36).slice(2, 10),
+        createdAt: new Date().toISOString(),
+        source: data.source,
+        status: "new",
+        page: clip(data.page, 120) || "/",
+        ...(name ? { name } : {}),
+        ...(phone ? { phone } : {}),
+        ...(topic ? { topic } : {}),
+        ...(message ? { message } : {}),
+        ...(data.piece && typeof data.piece.id === "string"
+          ? { piece: { id: clip(data.piece.id, 80), title: clip(data.piece.title, 120) } }
+          : {}),
+      };
+      await saveLead(lead);
+    } catch (error) {
+      console.warn("Could not record lead", error);
+    }
+    return { ok: true };
+  });
+
+export const getLeads = createServerFn({ method: "GET" }).handler(async (): Promise<Lead[]> => {
+  const { requireAdmin } = await import("@/server/auth");
+  const { listLeads } = await import("@/server/storage");
+  requireAdmin();
+  return listLeads();
+});
+
+const sameLead = (a: Lead, b: { id: string; createdAt: string }) => a.id === b.id && a.createdAt === b.createdAt;
+
+export const updateLeadStatus = createServerFn({ method: "POST" })
+  .validator((input: { id: string; createdAt: string; status: Lead["status"] }) => {
+    if (typeof input?.id !== "string" || typeof input.createdAt !== "string" || !["new", "contacted"].includes(input.status)) {
+      throw new Error("Invalid update.");
+    }
+    return input;
+  })
+  .handler(async ({ data }): Promise<Lead[]> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { listLeads, saveLead } = await import("@/server/storage");
+    requireAdmin();
+    const leads = await listLeads();
+    const current = leads.find((l) => sameLead(l, data));
+    if (!current) throw new Error("That lead no longer exists. Refresh and try again.");
+    await saveLead({ ...current, status: data.status });
+    return leads.map((l) => (sameLead(l, data) ? { ...l, status: data.status } : l));
+  });
+
+export const removeLead = createServerFn({ method: "POST" })
+  .validator((input: { id: string; createdAt: string }) => {
+    if (typeof input?.id !== "string" || typeof input.createdAt !== "string") throw new Error("Missing lead.");
+    return input;
+  })
+  .handler(async ({ data }): Promise<Lead[]> => {
+    const { requireAdmin } = await import("@/server/auth");
+    const { listLeads, deleteLead } = await import("@/server/storage");
+    requireAdmin();
+    const leads = await listLeads();
+    const current = leads.find((l) => sameLead(l, data));
+    if (current) await deleteLead(current);
+    return leads.filter((l) => !sameLead(l, data));
   });

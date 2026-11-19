@@ -2,7 +2,7 @@
  * Business details and the shape of the editable site data (collection pieces + settings).
  * Safe to import from both browser and server code.
  */
-import { photo, type PhotoId } from "./photos";
+import { photo, RUNWAY_SETS, type PhotoId } from "./photos";
 
 function mapsSearch(query: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
@@ -70,9 +70,53 @@ export type Settings = {
   whatsappMessage: string;
 };
 
+/* ---------------------------------------------------------------- runway lookbook ------------- */
+
+export const LOOKBOOK_SETS = RUNWAY_SETS.map(({ id, title, note }) => ({ id, title, note }));
+export type LookbookSetId = (typeof RUNWAY_SETS)[number]["id"];
+export const isLookbookSet = (value: unknown): value is LookbookSetId =>
+  typeof value === "string" && LOOKBOOK_SETS.some((s) => s.id === value);
+export const lookbookSetTitle = (id: LookbookSetId) => LOOKBOOK_SETS.find((s) => s.id === id)?.title ?? id;
+
+export type LookbookPhoto = {
+  id: string;
+  set: LookbookSetId;
+  image: string;
+  /** Responsive sources for the built-in photos; uploads have a single optimised file. */
+  srcSet?: string;
+  width: number;
+  height: number;
+  alt: string;
+  createdAt: string;
+};
+
+/* ---------------------------------------------------------------- leads ----------------------- */
+
+export type LeadSource = "contact-form" | "piece" | "button";
+export const LEAD_SOURCES: Record<LeadSource, string> = {
+  "contact-form": "Contact form",
+  piece: "Piece enquiry",
+  button: "WhatsApp button",
+};
+
+/** An enquiry started on the website (the visitor then continues in WhatsApp). */
+export type Lead = {
+  id: string;
+  createdAt: string;
+  source: LeadSource;
+  status: "new" | "contacted";
+  page: string;
+  name?: string;
+  phone?: string;
+  topic?: string;
+  message?: string;
+  piece?: { id: string; title: string };
+};
+
 export type SiteData = {
   version: 1;
   pieces: Piece[];
+  lookbook: LookbookPhoto[];
   settings: Settings;
 };
 
@@ -86,9 +130,9 @@ type SeedPiece = [id: PhotoId, title: string, category: CategoryId, description:
 
 const SEED_PIECES: SeedPiece[] = [
   ["rw-0w3a0120", "Sunlit leaf-print kaftan", "clothing", "A flowing yellow kaftan printed with leaves, naturally dyed in warm sunlit tones.", true],
-  ["pr-img7271", "Leaf-print cushion cover", "accessories", "Plum leaf prints on natural cream fabric — a piece of the garden for your home.", true],
+  ["pr-img7271", "Leaf-print cushion cover", "accessories", "Plum leaf prints on natural cream fabric — a piece of the garden for your home."],
   ["rw-0w3a9983", "Ivory cape-sleeve gown", "limited", "Sweeping cape sleeves in ivory, traced with the faintest leaf prints.", true],
-  ["rw-0w3a0154", "Gold silk drape column", "limited", "A softly gathered column worn with a long, leaf-printed golden drape."],
+  ["rw-0w3a0154", "Gold silk drape column", "limited", "A softly gathered column worn with a long, leaf-printed golden drape.", true],
   ["pr-img7290", "Hand-printed scarves", "scarves", "Eco-printed scarves in soft, natural colour — each print entirely its own."],
   ["rw-0w3a0050", "Ivory waistcoat & leaf skirt", "clothing", "A tailored ivory waistcoat paired with a long, leaf-printed skirt."],
   ["pr-img7274", "Fabric-bound journals", "accessories", "Notebooks wrapped in eco-printed fabric, finished with a leather tie."],
@@ -107,9 +151,27 @@ const SEED_PIECES: SeedPiece[] = [
   ["pr-img7434", "Waistcoat & sunlit skirt", "clothing", "An ivory waistcoat over a pleated skirt printed in sunny yellow leaves."],
 ];
 
+/** The runway show photos, grouped into sets; editable in /admin → Runway lookbook. */
+export const SEED_LOOKBOOK: LookbookPhoto[] = RUNWAY_SETS.flatMap((set) =>
+  set.photos.map((id) => {
+    const image = photo(id);
+    return {
+      id: `seed-${id}`,
+      set: set.id,
+      image: image.src,
+      srcSet: image.srcSet,
+      width: image.width,
+      height: image.height,
+      alt: `Runway look — ${set.title}`,
+      createdAt: "2026-11-19T00:00:00.000Z",
+    };
+  }),
+);
+
 export const SEED_DATA: SiteData = {
   version: 1,
   settings: DEFAULT_SETTINGS,
+  lookbook: SEED_LOOKBOOK,
   pieces: SEED_PIECES.map(([id, title, category, description, featured = false], index) => {
     const image = photo(id);
     return {

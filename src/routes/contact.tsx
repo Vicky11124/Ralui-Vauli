@@ -5,7 +5,7 @@ import { ArrowRight, ArrowUpRight, Check, Gem, Handshake, Instagram, MapPin, Mes
 import { photo } from "@/lib/photos";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
 import { Reveal } from "@/components/site/motion";
-import { useSiteData } from "@/components/site/use-site";
+import { trackLead, useSiteData } from "@/components/site/use-site";
 import { BUSINESS, whatsappLink } from "@/lib/site-data";
 
 export const Route = createFileRoute("/contact")({
@@ -148,7 +148,7 @@ function ContactPage() {
             <Phone aria-hidden="true" />
             <h3>Phone & WhatsApp</h3>
             <p>For custom commissions, sizing, or direct enquiries, call or message us directly.</p>
-            <a className="text-link" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer">
+            <a className="text-link" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer" onClick={() => trackLead({ source: "button" })}>
               WhatsApp {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
             </a>
             <a className="text-link" href={`tel:${BUSINESS.phoneTel}`}>
@@ -196,7 +196,9 @@ function ContactPage() {
 function Composer({ topic, onTopicChange }: { topic: TopicId; onTopicChange: (id: TopicId) => void }) {
   const { settings } = useSiteData();
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [website, setWebsite] = useState(""); // hidden honeypot field for bots
   const [status, setStatus] = useState<"idle" | "sent" | "copied" | "manual">("idle");
 
   const topicTitle = topics.find((t) => t.id === topic)?.title ?? "";
@@ -205,6 +207,7 @@ function Composer({ topic, onTopicChange }: { topic: TopicId; onTopicChange: (id
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    trackLead({ source: "contact-form", name, phone, topic: topicTitle, message, website });
     const whatsapp = whatsappLink(settings, note);
     if (whatsapp) {
       window.open(whatsapp, "_blank", "noopener,noreferrer");
@@ -234,11 +237,11 @@ function Composer({ topic, onTopicChange }: { topic: TopicId; onTopicChange: (id
           </Reveal>
           <Reveal as="p" className="composer__hint" delay={160}>
             {hasWhatsApp
-              ? "Your note opens in a WhatsApp chat with us, already typed out — just press send."
+              ? "Your note opens in a WhatsApp chat with us, already typed out — just press send. We also keep a copy so we can follow up."
               : `We reply through Instagram. We'll copy your note and open a direct message to ${BUSINESS.instagramHandle} — just paste and send.`}
           </Reveal>
           <Reveal delay={220} className="composer__intro-links">
-            <a className="text-link text-link--ivory" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer">
+            <a className="text-link text-link--ivory" href={whatsappLink(settings) ?? `https://wa.me/${BUSINESS.whatsappNumber}`} target="_blank" rel="noreferrer" onClick={() => trackLead({ source: "button" })}>
               <MessageCircle aria-hidden="true" /> WhatsApp: {BUSINESS.phone} <ArrowUpRight aria-hidden="true" />
             </a>
             <a className="text-link text-link--ivory" href={`tel:${BUSINESS.phoneTel}`}>
@@ -267,9 +270,19 @@ function Composer({ topic, onTopicChange }: { topic: TopicId; onTopicChange: (id
             ))}
           </fieldset>
 
-          <label className="field">
-            <span>Your name</span>
-            <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="How should we greet you?" />
+          <div className="composer__row">
+            <label className="field">
+              <span>Your name</span>
+              <input value={name} onChange={(e) => setName(e.target.value)} autoComplete="given-name" placeholder="How should we greet you?" />
+            </label>
+            <label className="field">
+              <span>Phone (optional)</span>
+              <input value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" inputMode="tel" placeholder="So we can call you back" />
+            </label>
+          </div>
+          <label className="composer__trap" aria-hidden="true">
+            Website
+            <input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
           </label>
 
           <label className="field">

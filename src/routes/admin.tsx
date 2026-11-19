@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type DragEvent, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type DragEvent, type FormEvent } from "react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -18,15 +18,19 @@ import {
 } from "lucide-react";
 
 import logoOlive from "@/assets/logo-olive.png";
+import { LeadsManager } from "@/components/admin/leads-manager";
+import { LookbookManager } from "@/components/admin/lookbook-manager";
 import {
   adminSignIn,
   adminSignOut,
   deletePiece,
   getAdminSession,
+  getLeads,
   getSiteData,
   movePiece,
   savePiece,
   saveSettings,
+  setPieceCategory,
 } from "@/lib/api";
 import { formatBytes, optimiseImage, type OptimisedImage } from "@/lib/optimize-image";
 import { CATEGORIES, categoryLabel, whatsappLink, type CategoryId, type Piece, type SiteData } from "@/lib/site-data";
@@ -116,8 +120,17 @@ type Notice = { kind: "ok" | "error"; text: string } | null;
 function Dashboard({ initial, storage }: { initial: SiteData; storage: "blob" | "local" | "missing" }) {
   const router = useRouter();
   const [site, setSite] = useState(initial);
-  const [tab, setTab] = useState<"pieces" | "settings">("pieces");
+  const [tab, setTab] = useState<"pieces" | "lookbook" | "leads" | "settings">("pieces");
   const [notice, setNotice] = useState<Notice>(null);
+  const [newLeads, setNewLeads] = useState<number | null>(null);
+
+  // Count of new leads for the tab badge (the Leads tab keeps it up to date once opened).
+  useEffect(() => {
+    getLeads()
+      .then((leads) => setNewLeads(leads.filter((l) => l.status === "new").length))
+      .catch(() => setNewLeads(null));
+  }, []);
+  const onLeadCount = useCallback((count: number) => setNewLeads(count), []);
 
   useEffect(() => {
     if (!notice) return;
@@ -145,6 +158,12 @@ function Dashboard({ initial, storage }: { initial: SiteData; storage: "blob" | 
         <nav className="admin-tabs" aria-label="Admin sections">
           <button type="button" className={tab === "pieces" ? "is-active" : ""} onClick={() => setTab("pieces")}>
             Collection <span>{site.pieces.length}</span>
+          </button>
+          <button type="button" className={tab === "lookbook" ? "is-active" : ""} onClick={() => setTab("lookbook")}>
+            Runway lookbook <span>{site.lookbook.length}</span>
+          </button>
+          <button type="button" className={tab === "leads" ? "is-active" : ""} onClick={() => setTab("leads")}>
+            Leads {newLeads ? <span className="admin-tabs__alert">{newLeads} new</span> : null}
           </button>
           <button type="button" className={tab === "settings" ? "is-active" : ""} onClick={() => setTab("settings")}>
             Settings
@@ -174,11 +193,10 @@ function Dashboard({ initial, storage }: { initial: SiteData; storage: "blob" | 
       )}
 
       <main className="admin-main">
-        {tab === "pieces" ? (
-          <PiecesManager site={site} onApplied={applied} onFailed={failed} />
-        ) : (
-          <SettingsForm site={site} onApplied={applied} onFailed={failed} />
-        )}
+        {tab === "pieces" && <PiecesManager site={site} onApplied={applied} onFailed={failed} />}
+        {tab === "lookbook" && <LookbookManager site={site} onApplied={applied} onFailed={failed} />}
+        {tab === "leads" && <LeadsManager onCountChange={onLeadCount} onFailed={failed} />}
+        {tab === "settings" && <SettingsForm site={site} onApplied={applied} onFailed={failed} />}
       </main>
 
       {notice && (
@@ -386,8 +404,24 @@ function PiecesManager({ site, onApplied, onFailed }: { site: SiteData } & Handl
                   )}
                 </div>
                 <div className="admin-card__body">
-                  <p>{categoryLabel(piece.category)}</p>
                   <h3>{piece.title}</h3>
+                  <label className="admin-inline-select">
+                    <span>Category</span>
+                    <select
+                      value={piece.category}
+                      disabled={busy}
+                      onChange={(e) => {
+                        const category = e.target.value as CategoryId;
+                        void run(piece.id, () => setPieceCategory({ data: { id: piece.id, category } }), `Moved to “${categoryLabel(category)}”.`);
+                      }}
+                    >
+                      {CATEGORIES.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                 </div>
                 <div className="admin-card__actions">
                   <button type="button" onClick={() => setEditing(piece)} disabled={busy}>

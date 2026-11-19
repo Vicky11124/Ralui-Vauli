@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { SectionHeading, SitePage } from "@/components/site/chrome";
 import { Marquee, ParallaxImage, Reveal, useScrollProgress } from "@/components/site/motion";
 import { INSTAGRAM_URL } from "@/components/site/nav";
-import { useSiteData, useWhatsApp } from "@/components/site/use-site";
+import { trackLead, useSiteData, useWhatsApp } from "@/components/site/use-site";
 import { categoryLabel } from "@/lib/site-data";
 
 export const Route = createFileRoute("/")({
@@ -238,7 +238,7 @@ function Index() {
             </Link>
           </Button>
           {whatsapp ? (
-            <a className="whatsapp-button" href={whatsapp} target="_blank" rel="noreferrer">
+            <a className="whatsapp-button" href={whatsapp} target="_blank" rel="noreferrer" onClick={() => trackLead({ source: "button" })}>
               <MessageCircle aria-hidden="true" /> Chat on WhatsApp
             </a>
           ) : (

@@ -13,7 +13,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { DEFAULT_SETTINGS, SEED_DATA, type SiteData } from "@/lib/site-data";
+import { DEFAULT_SETTINGS, SEED_DATA, SEED_LOOKBOOK, type Lead, type SiteData } from "@/lib/site-data";
 import { loadLocalEnv } from "./env";
 
 const DATA_PREFIX = "data/site-";
@@ -41,7 +41,13 @@ const localUploadDir = () => path.join(process.cwd(), "public", "uploads");
 
 function normalise(data: Partial<SiteData> | null): SiteData {
   if (!data || !Array.isArray(data.pieces)) return structuredClone(SEED_DATA);
-  return { version: 1, pieces: data.pieces, settings: { ...DEFAULT_SETTINGS, ...data.settings } };
+  return {
+    version: 1,
+    pieces: data.pieces,
+    // Saved before the lookbook was editable: start from the built-in runway photos.
+    lookbook: Array.isArray(data.lookbook) ? data.lookbook : structuredClone(SEED_LOOKBOOK),
+    settings: { ...DEFAULT_SETTINGS, ...data.settings },
+  };
 }
 
 export async function readSiteData(): Promise<SiteData> {
@@ -111,4 +117,75 @@ export async function removeImage(url: string) {
   } catch (error) {
     console.warn("Could not remove image", url, error);
   }
+}
+
+/* ---------------------------------------------------------------- leads ------------------------
+ * One small JSON file per lead (leads/<time>-<id>.json), so visitor enquiries never rewrite the
+ * main site data and two enquiries arriving together can't overwrite each other.
+ */
+const LEAD_PREFIX = "leads/";
+const localLeadDir = () => path.join(process.cwd(), ".data", "leads");
+const leadFileName = (lead: Lead) => `${lead.createdAt.replace(/[:.]/g, "-")}_${lead.id}.json`;
+
+export async function saveLead(lead: Lead) {
+  assertWritable();
+  const body = JSON.stringify(lead);
+  if (useBlob()) {
+    const { put } = await import("@vercel/blob");
+    await put(`${LEAD_PREFIX}${leadFileName(lead)}`, body, {
+      access: "public",
+      contentType: "application/json",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      cacheControlMaxAge: 60,
+    });
+    return;
+  }
+  await mkdir(localLeadDir(), { recursive: true });
+  await writeFile(path.join(localLeadDir(), leadFileName(lead)), body, "utf8");
+}
+
+/** All leads, newest first. */
+export async function listLeads(): Promise<Lead[]> {
+  if (useBlob()) {
+    const { list } = await import("@vercel/blob");
+    const blobs: { url: string; uploadedAt: Date }[] = [];
+    let cursor: string | undefined;
+    do {
+      const page = await list({ prefix: LEAD_PREFIX, limit: 1000, ...(cursor ? { cursor } : {}) });
+      blobs.push(...page.blobs);
+      cursor = page.hasMore ? page.cursor : undefined;
+    } while (cursor);
+    const leads = await Promise.all(
+      blobs.map(async (b) => {
+        // The upload time in the URL skips any cached copy after a status change.
+        const res = await fetch(`${b.url}?v=${+new Date(b.uploadedAt)}`, { cache: "no-store" });
+        return res.ok ? ((await res.json()) as Lead) : null;
+      }),
+    );
+    return sortLeads(leads.filter((l): l is Lead => Boolean(l)));
+  }
+  try {
+    const { readdir } = await import("node:fs/promises");
+    const files = (await readdir(localLeadDir())).filter((f) => f.endsWith(".json"));
+    const leads = await Promise.all(
+      files.map(async (f) => JSON.parse(await readFile(path.join(localLeadDir(), f), "utf8")) as Lead),
+    );
+    return sortLeads(leads);
+  } catch {
+    return [];
+  }
+}
+
+const sortLeads = (leads: Lead[]) => leads.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
+export async function deleteLead(lead: Lead) {
+  assertWritable();
+  if (useBlob()) {
+    const { list, del } = await import("@vercel/blob");
+    const { blobs } = await list({ prefix: `${LEAD_PREFIX}${leadFileName(lead)}` });
+    if (blobs.length) await del(blobs.map((b) => b.url));
+    return;
+  }
+  await rm(path.join(localLeadDir(), leadFileName(lead)), { force: true });
 }

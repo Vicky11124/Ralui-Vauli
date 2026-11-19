@@ -8,7 +8,7 @@ import logoOlive from "@/assets/logo-olive.png";
 import { Button } from "@/components/ui/button";
 import { BUSINESS } from "@/lib/site-data";
 import { nextPage, sitePages, type SitePath } from "./nav";
-import { useWhatsApp } from "./use-site";
+import { trackLead, useWhatsApp } from "./use-site";
 import { ParallaxImage, Reveal, useScrollProgress } from "./motion";
 
 /* ----------------------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ export function SiteFooter() {
             <ArrowUpRight aria-hidden="true" />
           </a>
           {whatsapp && (
-            <a className="footer-instagram" href={whatsapp} target="_blank" rel="noreferrer">
+            <a className="footer-instagram" href={whatsapp} target="_blank" rel="noreferrer" onClick={() => trackLead({ source: "button" })}>
               <MessageCircle aria-hidden="true" /> <span>WhatsApp: {BUSINESS.phone}</span>
               <ArrowUpRight aria-hidden="true" />
             </a>
@@ -340,7 +340,7 @@ export function WhatsAppButton() {
   const href = useWhatsApp();
   if (!href) return null;
   return (
-    <a className="whatsapp-fab" href={href} target="_blank" rel="noreferrer" aria-label="Chat with RALUI VALUI on WhatsApp">
+    <a className="whatsapp-fab" href={href} target="_blank" rel="noreferrer" aria-label="Chat with RALUI VALUI on WhatsApp" onClick={() => trackLead({ source: "button" })}>
       <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false">
         <path
           fill="currentColor"

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useRef, useState, type TouchEvent } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
-import { photo, RUNWAY_SETS, type PhotoId } from "@/lib/photos";
+import { LOOKBOOK_SETS, lookbookSetTitle, type LookbookPhoto, type LookbookSetId } from "@/lib/site-data";
+import { useSiteData } from "./use-site";
 
 const STEP = 12;
 
-type SetId = (typeof RUNWAY_SETS)[number]["id"] | "all";
+type SetId = LookbookSetId | "all";
 
 /**
  * The full runway lookbook: filter by set, reveal 12 at a time, and open any photo full-screen
@@ -16,15 +17,12 @@ export function Lookbook() {
   const [shown, setShown] = useState(STEP);
   const [open, setOpen] = useState<number | null>(null);
 
-  const photos: { id: PhotoId; set: string }[] =
-    set === "all"
-      ? RUNWAY_SETS.flatMap((s) => s.photos.map((id) => ({ id: id as PhotoId, set: s.title })))
-      : (RUNWAY_SETS.find((s) => s.id === set)?.photos ?? []).map((id) => ({
-          id: id as PhotoId,
-          set: RUNWAY_SETS.find((s) => s.id === set)!.title,
-        }));
+  // Managed in /admin → Runway lookbook. "All" keeps the sets in order.
+  const { lookbook } = useSiteData();
+  const bySet = (id: LookbookSetId) => lookbook.filter((p) => p.set === id);
+  const photos: LookbookPhoto[] = set === "all" ? LOOKBOOK_SETS.flatMap((s) => bySet(s.id)) : bySet(set);
   const visible = photos.slice(0, shown);
-  const activeSet = RUNWAY_SETS.find((s) => s.id === set);
+  const activeSet = LOOKBOOK_SETS.find((s) => s.id === set);
 
   const choose = (id: SetId) => {
     setSet(id);
@@ -35,27 +33,24 @@ export function Lookbook() {
     <div className="lookbook-full">
       <div className="lookbook-full__tabs" role="toolbar" aria-label="Filter the lookbook">
         <button type="button" className={set === "all" ? "is-active" : ""} aria-pressed={set === "all"} onClick={() => choose("all")}>
-          All looks <span>{RUNWAY_SETS.reduce((n, s) => n + s.photos.length, 0)}</span>
+          All looks <span>{lookbook.length}</span>
         </button>
-        {RUNWAY_SETS.map((s) => (
+        {LOOKBOOK_SETS.filter((s) => bySet(s.id).length > 0).map((s) => (
           <button type="button" key={s.id} className={set === s.id ? "is-active" : ""} aria-pressed={set === s.id} onClick={() => choose(s.id)}>
-            {s.title} <span>{s.photos.length}</span>
+            {s.title} <span>{bySet(s.id).length}</span>
           </button>
         ))}
       </div>
       {activeSet && <p className="lookbook-full__note">{activeSet.note}</p>}
 
       <ul className="lookbook-full__grid" key={set}>
-        {visible.map((item, index) => {
-          const p = photo(item.id);
-          return (
-            <li key={item.id} style={{ animationDelay: `${(index % STEP) * 45}ms` }}>
-              <button type="button" onClick={() => setOpen(index)} aria-label={`Open look ${index + 1} of ${photos.length} (${item.set})`}>
-                <img src={p.at(480)} srcSet={p.srcSet} sizes="(max-width: 760px) 50vw, 25vw" alt={`Runway look — ${item.set}`} width={480} height={Math.round(p.height / 2)} loading="lazy" decoding="async" />
-              </button>
-            </li>
-          );
-        })}
+        {visible.map((item, index) => (
+          <li key={item.id} style={{ animationDelay: `${(index % STEP) * 45}ms` }}>
+            <button type="button" onClick={() => setOpen(index)} aria-label={`Open look ${index + 1} of ${photos.length} (${lookbookSetTitle(item.set)})`}>
+              <img src={item.image} srcSet={item.srcSet} sizes={item.srcSet ? "(max-width: 760px) 50vw, 25vw" : undefined} alt={item.alt} width={item.width} height={item.height} loading="lazy" decoding="async" />
+            </button>
+          </li>
+        ))}
       </ul>
 
       {shown < photos.length && (
@@ -80,7 +75,7 @@ function Lightbox({
   onIndex,
   onClose,
 }: {
-  photos: { id: PhotoId; set: string }[];
+  photos: LookbookPhoto[];
   index: number;
   onIndex: (i: number) => void;
   onClose: () => void;
@@ -111,7 +106,7 @@ function Lightbox({
 
   const item = photos[index];
   if (!item) return null;
-  const p = photo(item.id);
+  const setTitle = lookbookSetTitle(item.set);
 
   return (
     <div
@@ -128,7 +123,7 @@ function Lightbox({
         touchX.current = null;
       }}
     >
-      <img key={item.id} className="lightbox__image" src={p.at(1600)} srcSet={p.srcSet} sizes="(max-width: 760px) 100vw, 60vw" alt={`Runway look — ${item.set}`} />
+      <img key={item.id} className="lightbox__image" src={item.image} srcSet={item.srcSet} sizes={item.srcSet ? "(max-width: 760px) 100vw, 60vw" : undefined} alt={item.alt} />
       <button ref={closeRef} type="button" className="lightbox__close" onClick={onClose} aria-label="Close">
         <X aria-hidden="true" />
       </button>
@@ -139,7 +134,7 @@ function Lightbox({
         <ChevronRight aria-hidden="true" />
       </button>
       <p className="lightbox__caption">
-        {item.set} <span>{index + 1} / {photos.length}</span>
+        {setTitle} <span>{index + 1} / {photos.length}</span>
       </p>
     </div>
   );
