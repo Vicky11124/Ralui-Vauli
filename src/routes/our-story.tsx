@@ -70,7 +70,7 @@ function StoryPage() {
           />
         </Reveal>
         <div className="maker__copy">
-          <SectionHeading id="maker-title" eyebrow="The founder" lines={["Ralui", <em key="em">Valui.</em>]} />
+          <SectionHeading id="maker-title" eyebrow="The founder" lines={[<span key="name" className="nowrap">Ralui <em>Valui.</em></span>]} />
           <Reveal as="p" className="maker__lead" delay={100}>
             Every piece begins with a leaf, a length of natural cloth, and the hand of the maker.
           </Reveal>
@@ -112,7 +112,7 @@ function StoryPage() {
 
       <section className="duo" aria-label="Moments from the studio">
         <ParallaxImage className="duo__image duo__image--a" src={photo("pr-img7279").src} srcSet={photo("pr-img7279").srcSet} sizes="(max-width: 760px) 50vw, 40vw" alt="Close-up of eco-printed fabric with leaf impressions" width={960} height={1280} strength={10} />
-        <ParallaxImage className="duo__image duo__image--b" src={photo("pr-img7315").src} srcSet={photo("pr-img7315").srcSet} sizes="(max-width: 760px) 50vw, 50vw" alt="The RALUI VALUI market stall with eco-printed clothing on display" width={960} height={1280} position="center 55%" strength={26} />
+        <ParallaxImage className="duo__image duo__image--b" src={photo("pr-img7315").src} srcSet={photo("pr-img7315").srcSet} sizes="(max-width: 760px) 50vw, 50vw" alt="The RALUI VALUI market stall with eco-printed clothing on display" width={960} height={1280} position="center 55%" strength={10} />
         <Reveal className="duo__quote">
           <span aria-hidden="true">“</span>
           <p>We believe in the beauty of natural fibres.</p>

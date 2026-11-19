@@ -628,9 +628,11 @@ html.js .reveal--mask:not(.is-visible) .split-lines__line { transform: translate
 .value h3 { margin: 0; font-family: var(--font-editorial); font-size: clamp(2rem, 3vw, 2.8rem); font-weight: 400; line-height: 1.05; }
 .value p { max-width: 30rem; margin: 0.8rem 0 0; color: var(--color-muted-foreground); font-size: 0.9rem; line-height: 1.85; }
 
-.duo { position: relative; display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(1rem, 3vw, 3rem); padding: 4rem var(--page-gutter) 8rem; }
+.duo { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: start; gap: clamp(1rem, 3vw, 3rem); padding: 4rem var(--page-gutter) 8rem; }
 .duo__image { aspect-ratio: 0.8; }
-.duo__image--b { aspect-ratio: 1.05; margin-top: 9rem; }
+/* Both photos share one shape and line up top and bottom. */
+.duo__image--b { aspect-ratio: 0.8; margin-top: 0; }
+.nowrap { white-space: nowrap; }
 .duo__quote { position: absolute; top: 50%; left: 50%; width: min(34rem, 80vw); padding: 2.6rem 2.6rem 2.2rem; background: var(--color-background); text-align: center; translate: -50% -50%; box-shadow: 0 2rem 4rem oklch(0.27 0.012 113 / 10%); }
 .duo__quote > span { display: block; height: 2.6rem; color: var(--warm-earth); font-family: var(--font-editorial); font-size: 5rem; line-height: 1; }
 .duo__quote p { margin: 0.6rem 0 0; font-family: var(--font-editorial); font-size: clamp(1.7rem, 2.6vw, 2.4rem); font-style: italic; line-height: 1.2; }
@@ -809,7 +811,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .value { grid-template-columns: 3rem 1fr; padding: 1.8rem 0; }
   .value__number { font-size: 2rem; }
   .duo { grid-template-columns: 1fr 1fr; padding-bottom: 12rem; }
-  .duo__image--b { margin-top: 4rem; }
   .duo__quote { top: auto; bottom: 2rem; padding: 1.8rem 1.5rem; translate: -50% 0; }
 
   .process-card { grid-template-columns: 1fr; top: calc(5.5rem + var(--i) * 0.8rem); min-height: 0; margin-bottom: 1.5rem; }
