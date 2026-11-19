@@ -2,12 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Instagram, Leaf, MessageCircle } from "lucide-react";
 
-import heroImage from "@/assets/eco-art-hero.jpg";
 import processImage from "@/assets/eco-art-process.jpg";
 import { photo } from "@/lib/photos";
 import { Button } from "@/components/ui/button";
 import { SectionHeading, SitePage } from "@/components/site/chrome";
 import { Marquee, ParallaxImage, Reveal, useScrollProgress } from "@/components/site/motion";
+import { HeroVideo } from "@/components/site/film";
 import { INSTAGRAM_URL } from "@/components/site/nav";
 import { trackLead, useSiteData, useWhatsApp } from "@/components/site/use-site";
 import { categoryLabel } from "@/lib/site-data";
@@ -53,15 +53,7 @@ function Index() {
   return (
     <SitePage>
       <section ref={heroRef} className="hero" id="home" aria-labelledby="hero-title">
-        <ParallaxImage
-          className="hero__image"
-          src={heroImage}
-          alt="An artist in a flowing ivory botanical-print dress in an open landscape"
-          width={1920}
-          height={1200}
-          strength={16}
-          priority
-        />
+        <HeroVideo className="hero__image" src="/video/runway-film.mp4" poster="/video/runway-film.jpg" />
         <div className="hero__shade" />
         <div className="hero__content">
           <p className="eyebrow hero__eyebrow">
