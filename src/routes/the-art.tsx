@@ -2,9 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { CSSProperties } from "react";
 import { Leaf } from "lucide-react";
 
-import textileImage from "@/assets/eco-art-textile.jpg";
 import processImage from "@/assets/eco-art-process.jpg";
-import runwayImage from "@/assets/eco-art-runway.jpg";
+import { photo } from "@/lib/photos";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
 import { ExpandingImage, Reveal } from "@/components/site/motion";
 
@@ -23,6 +22,9 @@ export const Route = createFileRoute("/the-art")({
   component: ArtPage,
 });
 
+const artHero = photo("pr-img7279");
+const artExpand = photo("rw-0w3a0179");
+
 const steps = [
   {
     title: "Gathered",
@@ -34,9 +36,9 @@ const steps = [
   {
     title: "Prepared",
     text: "Only natural-fibre fabrics are used — silk, cotton, linen and other natural textiles. Each is cleaned and readied so it can receive and keep the colour the plants will give.",
-    image: textileImage,
-    zoom: 1.7,
-    origin: "18% 42%",
+    image: photo("pr-img7278").src,
+    zoom: 1,
+    origin: "center",
   },
   {
     title: "Arranged",
@@ -48,16 +50,16 @@ const steps = [
   {
     title: "Printed & dyed",
     text: "The cloth is rolled tightly around its leaves, bound and given heat and time. Natural dyes add depth and ground colour as pigment moves from plant into fibre.",
-    image: processImage,
-    zoom: 2.3,
-    origin: "8% 30%",
+    image: photo("pr-img7272").src,
+    zoom: 1,
+    origin: "center",
   },
   {
     title: "Revealed",
     text: "Unrolled, rested and finished. The plant's fleeting imprint appears on the cloth — a print that could never be planned, and will never be repeated.",
-    image: textileImage,
-    zoom: 1.5,
-    origin: "88% 72%",
+    image: photo("pr-img7280").src,
+    zoom: 1,
+    origin: "center",
   },
 ];
 
@@ -83,11 +85,12 @@ function ArtPage() {
         eyebrow="From leaf to cloth"
         title={["No two leaves.", <em key="em">No two stories.</em>]}
         description="Botanical eco-printing and natural dyeing — a conversation between plant, natural fibre and heat. Here is how a leaf becomes a print."
-        image={textileImage}
-        imageAlt="Cloth printed with ferns and leaves, folded beside fresh botanicals"
-        imageWidth={1024}
-        imageHeight={1280}
-        imagePosition="center 60%"
+        image={artHero.at(1600)}
+        imageSrcSet={artHero.srcSet}
+        imageAlt="Close-up of fabric eco-printed with leaves and flowers"
+        imageWidth={1600}
+        imageHeight={2133}
+        imagePosition="center 55%"
         scrollTarget="#process"
       />
 
@@ -114,7 +117,7 @@ function ArtPage() {
         </div>
       </section>
 
-      <ExpandingImage src={runwayImage} alt="Botanical-print looks in sage, ivory and rust" position="center 35%">
+      <ExpandingImage src={artExpand.at(1600)} srcSet={artExpand.srcSet} alt="Two models on the runway in leaf-printed silk" position="center 30%">
         <p className="eyebrow">
           <Leaf aria-hidden="true" /> The result
         </p>

@@ -4,7 +4,7 @@ import { ArrowDown, ArrowRight, ArrowUpRight, Instagram, Leaf, MessageCircle } f
 
 import heroImage from "@/assets/eco-art-hero.jpg";
 import processImage from "@/assets/eco-art-process.jpg";
-import runwayImage from "@/assets/eco-art-runway.jpg";
+import { photo } from "@/lib/photos";
 import { Button } from "@/components/ui/button";
 import { SectionHeading, SitePage } from "@/components/site/chrome";
 import { Marquee, ParallaxImage, Reveal, useScrollProgress } from "@/components/site/motion";
@@ -205,7 +205,7 @@ function Index() {
       <Marquee items={["Botanical eco-printing", "Natural dyeing", "Silk · Cotton · Linen", "One of a kind", "Wearable art"]} tone="olive" />
 
       <section className="runway" id="runway" aria-labelledby="runway-title">
-        <ParallaxImage className="runway__media" src={runwayImage} alt="Botanical eco-print designs on the runway" width={1280} height={960} position="center 45%" strength={18} />
+        <ParallaxImage className="runway__media" src={photo("rw-0m2a1825").at(1600)} srcSet={photo("rw-0m2a1825").srcSet} alt="A model twirling a flowing, leaf-printed yellow skirt on the runway" width={1600} height={2400} position="center 38%" strength={18} />
         <div className="runway__shade" />
         <div className="runway__copy">
           <Reveal as="p" className="eyebrow" variant="fade">In motion, in season</Reveal>

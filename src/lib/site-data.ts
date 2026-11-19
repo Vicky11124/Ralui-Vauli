@@ -2,6 +2,7 @@
  * Business details and the shape of the editable site data (collection pieces + settings).
  * Safe to import from both browser and server code.
  */
+import { photo, type PhotoId } from "./photos";
 
 function mapsSearch(query: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
@@ -38,6 +39,7 @@ export const CATEGORIES = [
   { id: "shawls", label: "Naturally dyed shawls", short: "Shawls" },
   { id: "textiles", label: "Eco-printed textiles", short: "Textiles" },
   { id: "limited", label: "Limited-edition wearable art", short: "Limited edition" },
+  { id: "accessories", label: "Accessories & home", short: "Accessories" },
 ] as const;
 
 export type CategoryId = (typeof CATEGORIES)[number]["id"];
@@ -79,84 +81,50 @@ export const DEFAULT_SETTINGS: Settings = {
   whatsappMessage: "Hello Ralui Valui, I found you through your website and would love to know more.",
 };
 
-/** Starter pieces shown until the owner adds their own through /admin. */
+/** Real pieces shown until the owner edits the collection in /admin (then their saved list is used). */
+type SeedPiece = [id: PhotoId, title: string, category: CategoryId, description: string, featured?: boolean];
+
+const SEED_PIECES: SeedPiece[] = [
+  ["rw-0w3a0120", "Sunlit leaf-print kaftan", "clothing", "A flowing yellow kaftan printed with leaves, naturally dyed in warm sunlit tones.", true],
+  ["pr-img7271", "Leaf-print cushion cover", "accessories", "Plum leaf prints on natural cream fabric — a piece of the garden for your home.", true],
+  ["rw-0w3a9983", "Ivory cape-sleeve gown", "limited", "Sweeping cape sleeves in ivory, traced with the faintest leaf prints.", true],
+  ["rw-0w3a0154", "Gold silk drape column", "limited", "A softly gathered column worn with a long, leaf-printed golden drape."],
+  ["pr-img7290", "Hand-printed scarves", "scarves", "Eco-printed scarves in soft, natural colour — each print entirely its own."],
+  ["rw-0w3a0050", "Ivory waistcoat & leaf skirt", "clothing", "A tailored ivory waistcoat paired with a long, leaf-printed skirt."],
+  ["pr-img7274", "Fabric-bound journals", "accessories", "Notebooks wrapped in eco-printed fabric, finished with a leather tie."],
+  ["rw-0w3a0172", "Leaf-printed silk drape", "shawls", "A long golden drape carrying bold leaf prints, worn over a soft neutral gown."],
+  ["rw-0w3a0085", "Off-shoulder leaf-print dress", "clothing", "A playful off-shoulder dress with puff sleeves and a scattered leaf print."],
+  ["pr-img7357", "Eco-printed scrunchie", "accessories", "A generous scrunchie in naturally printed fabric — the smallest piece of wearable art."],
+  ["rw-0w3a0123", "Leaf-print bandeau & skirt", "clothing", "A printed bandeau with a flowing, softly dyed skirt."],
+  ["pr-img7272", "Botanical cushion set", "accessories", "Cushion covers printed with large leaves, each one unique."],
+  ["rw-0w3a9965", "Blush wrap dress", "clothing", "A blush-toned dress with a twisted front and a quiet botanical print."],
+  ["pr-img7280", "Sunlit printed journal", "accessories", "A fabric-covered journal printed in yellows and greens."],
+  ["rw-0w3a0137", "Ivory peplum & wide trousers", "clothing", "A one-shoulder peplum top and wide trousers, scattered with leaf prints."],
+  ["rw-0w3a9925", "Men's eco-printed shirt", "clothing", "A relaxed short-sleeve shirt with a subtle botanical print."],
+  ["pr-img7369", "Scarf, scrunchie & journal", "accessories", "A coordinated set in matching naturally printed fabric — a thoughtful gift."],
+  ["rw-0w3a0058", "Yellow jacket & printed skirt", "clothing", "A cream jacket with yellow cuffs over a naturally dyed, leaf-printed skirt."],
+  ["pr-img7433", "Naturally dyed pieces", "textiles", "Soft golds and creams from natural dyes, hanging at the market stall."],
+  ["pr-img7434", "Waistcoat & sunlit skirt", "clothing", "An ivory waistcoat over a pleated skirt printed in sunny yellow leaves."],
+];
+
 export const SEED_DATA: SiteData = {
   version: 1,
   settings: DEFAULT_SETTINGS,
-  pieces: [
-    {
-      id: "seed-living-print-dress",
-      title: "The living print dress",
-      category: "clothing",
-      fabric: "Natural fibre",
-      description: "A flowing botanical eco-printed dress carrying the full shape of the leaf.",
-      image: "/seed/living-print-dress.webp",
-      width: 960,
-      height: 1200,
-      featured: true,
-      createdAt: "2026-11-17T00:00:00.000Z",
-    },
-    {
-      id: "seed-eco-printed-textiles",
-      title: "Eco-printed textile lengths",
-      category: "textiles",
-      fabric: "Natural fibre",
-      description: "Exclusive lengths printed with ferns, leaves and flowers — no two alike.",
-      image: "/seed/eco-printed-textiles.webp",
-      width: 1000,
-      height: 1250,
-      featured: true,
-      createdAt: "2026-11-17T00:00:01.000Z",
-    },
-    {
-      id: "seed-sage-layered-ensemble",
-      title: "Sage layered ensemble",
-      category: "limited",
-      fabric: "Natural fibre",
-      description: "A sheer sage layer over an ivory botanical print. Limited-edition wearable art.",
-      image: "/seed/sage-layered-ensemble.webp",
-      width: 397,
-      height: 496,
-      featured: true,
-      createdAt: "2026-11-17T00:00:02.000Z",
-    },
-    {
-      id: "seed-rust-shawl-ensemble",
-      title: "Rust shawl & ivory print",
-      category: "shawls",
-      fabric: "Natural fibre",
-      description: "A naturally dyed rust shawl worn over an ivory eco-printed column.",
-      image: "/seed/rust-shawl-ensemble.webp",
-      width: 397,
-      height: 496,
-      featured: false,
-      createdAt: "2026-11-17T00:00:03.000Z",
-    },
-    {
-      id: "seed-ivory-botanical-drape",
-      title: "Ivory botanical drape",
-      category: "clothing",
-      fabric: "Natural fibre",
-      description: "Scattered leaf prints on a light ivory drape, made to move.",
-      image: "/seed/ivory-botanical-drape.webp",
-      width: 397,
-      height: 496,
-      featured: false,
-      createdAt: "2026-11-17T00:00:04.000Z",
-    },
-    {
-      id: "seed-leaf-on-cloth",
-      title: "Leaf on cloth — in the making",
-      category: "scarves",
-      fabric: "Natural fibre",
-      description: "Botanicals laid by hand before printing. Each piece begins like this.",
-      image: "/seed/leaf-on-cloth.webp",
-      width: 1000,
-      height: 1250,
-      featured: false,
-      createdAt: "2026-11-17T00:00:05.000Z",
-    },
-  ],
+  pieces: SEED_PIECES.map(([id, title, category, description, featured = false], index) => {
+    const image = photo(id);
+    return {
+      id: `seed-${id}`,
+      title,
+      category,
+      fabric: "",
+      description,
+      image: image.src,
+      width: image.width,
+      height: image.height,
+      featured,
+      createdAt: new Date(Date.UTC(2026, 10, 19, 0, 0, SEED_PIECES.length - index)).toISOString(),
+    };
+  }),
 };
 
 /** wa.me link, or null when no number is configured. */

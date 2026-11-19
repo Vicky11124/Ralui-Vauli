@@ -209,8 +209,13 @@ export function ParallaxImage({
   strength = 12,
   position,
   priority = false,
+  srcSet,
+  sizes = "100vw",
 }: {
   src: string;
+  /** Optional responsive sources ("a.webp 480w, b.webp 960w"). */
+  srcSet?: string | undefined;
+  sizes?: string | undefined;
   alt: string;
   width: number;
   height: number;
@@ -226,9 +231,12 @@ export function ParallaxImage({
     <div ref={ref} className={`parallax ${className}`.trim()} style={{ "--strength": strength } as CSSProperties}>
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={srcSet ? sizes : undefined}
         alt={alt}
         width={width}
         height={height}
+        decoding="async"
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : undefined}
         style={position ? { objectPosition: position } : undefined}
@@ -285,8 +293,10 @@ export function ExpandingImage({
   position,
   children,
   tone = "light",
+  srcSet,
 }: {
   src: string;
+  srcSet?: string | undefined;
   alt: string;
   position?: string | undefined;
   children?: ReactNode;
@@ -319,7 +329,7 @@ export function ExpandingImage({
     <section ref={ref} className={`expand expand--${tone}${open ? " is-open" : ""}`}>
       <div className="expand__frame">
         <div className="expand__media">
-          <img src={src} alt={alt} loading="lazy" style={position ? { objectPosition: position } : undefined} />
+          <img src={src} srcSet={srcSet} sizes={srcSet ? "100vw" : undefined} alt={alt} loading="lazy" decoding="async" style={position ? { objectPosition: position } : undefined} />
           <div className="expand__shade" />
         </div>
         {children && <div className="expand__copy">{children}</div>}

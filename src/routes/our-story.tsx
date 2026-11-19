@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, MapPin } from "lucide-react";
 
-import heroImage from "@/assets/eco-art-hero.jpg";
-import textileImage from "@/assets/eco-art-textile.jpg";
+import { photo } from "@/lib/photos";
 import processImage from "@/assets/eco-art-process.jpg";
 import founderImage from "@/assets/founder.jpg";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
@@ -112,8 +111,8 @@ function StoryPage() {
       </section>
 
       <section className="duo" aria-label="Moments from the studio">
-        <ParallaxImage className="duo__image duo__image--a" src={textileImage} alt="Eco-printed cloth with fern and leaf impressions" width={1024} height={1280} strength={10} />
-        <ParallaxImage className="duo__image duo__image--b" src={heroImage} alt="A botanical-print dress in the open landscape" width={1920} height={1200} position="70% 40%" strength={26} />
+        <ParallaxImage className="duo__image duo__image--a" src={photo("pr-img7279").src} srcSet={photo("pr-img7279").srcSet} sizes="(max-width: 760px) 50vw, 40vw" alt="Close-up of eco-printed fabric with leaf impressions" width={960} height={1280} strength={10} />
+        <ParallaxImage className="duo__image duo__image--b" src={photo("pr-img7315").src} srcSet={photo("pr-img7315").srcSet} sizes="(max-width: 760px) 50vw, 50vw" alt="The RALUI VALUI market stall with eco-printed clothing on display" width={960} height={1280} position="center 55%" strength={26} />
         <Reveal className="duo__quote">
           <span aria-hidden="true">“</span>
           <p>We believe in the beauty of natural fibres.</p>

@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight, Instagram } from "lucide-react";
 
-import heroImage from "@/assets/eco-art-hero.jpg";
-import textileImage from "@/assets/eco-art-textile.jpg";
-import runwayImage from "@/assets/eco-art-runway.jpg";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
+import { Lookbook } from "@/components/site/lookbook";
 import { INSTAGRAM_URL } from "@/components/site/nav";
 import { BUSINESS } from "@/lib/site-data";
+import { photo, type PhotoId } from "@/lib/photos";
 import { ExpandingImage, Marquee, ParallaxImage, Reveal, ScrollText } from "@/components/site/motion";
 
 export const Route = createFileRoute("/runway")({
@@ -15,7 +14,7 @@ export const Route = createFileRoute("/runway")({
       { title: "Runway — RALUI VALUI" },
       {
         name: "description",
-        content: "Limited-edition wearable art in motion: botanical eco-printed and naturally dyed looks by RALUI VALUI.",
+        content: "Limited-edition wearable art in motion: botanical eco-printed and naturally dyed looks by RALUI VALUI, straight from the runway.",
       },
       { property: "og:title", content: "Runway — RALUI VALUI" },
     ],
@@ -23,27 +22,28 @@ export const Route = createFileRoute("/runway")({
   component: RunwayPage,
 });
 
-const looks = [
+const hero = photo("rw-0w3a0120");
+const expand = photo("rw-0w3a0165");
+const follow = photo("pr-img7290");
+
+const looks: { id: PhotoId; name: string; detail: string; strength: number }[] = [
   {
-    number: "Look 01",
-    name: "The ivory drape",
-    detail: "Light ivory natural fabric, eco-printed with scattered leaves and worn as a single flowing drape.",
-    position: "17% 40%",
+    id: "rw-0w3a9983",
+    name: "The ivory cape",
+    detail: "Sweeping ivory sleeves traced with the faintest leaf prints — light enough to move with every step.",
     strength: 10,
   },
   {
-    number: "Look 02",
-    name: "Sage layers",
-    detail: "A long sage overlay above an ivory print — layered, light and quietly bold.",
-    position: "50% 40%",
-    strength: 22,
+    id: "rw-0w3a0120",
+    name: "Sunlit kaftan",
+    detail: "A full, flowing kaftan printed with leaves and naturally dyed in warm, glowing yellows.",
+    strength: 18,
   },
   {
-    number: "Look 03",
-    name: "Rust & ivory",
-    detail: "An ivory botanical column with a naturally dyed rust shawl, carrying the warmth of the earth.",
-    position: "84% 40%",
-    strength: 14,
+    id: "rw-0w3a0154",
+    name: "The gold drape",
+    detail: "A softly gathered column worn with a long golden drape carrying bold leaf prints.",
+    strength: 12,
   },
 ];
 
@@ -54,19 +54,20 @@ function RunwayPage() {
         index="Runway"
         eyebrow="Limited-edition wearable art"
         title={["A living", <em key="em">collection.</em>]}
-        description="Botanical eco-prints and natural dyes on flowing natural fibres. See how each print comes alive when it is worn."
-        image={runwayImage}
-        imageAlt="Three models walking in botanical eco-print designs through a sunlit courtyard"
-        imageWidth={1280}
-        imageHeight={960}
-        imagePosition="center 30%"
+        description="Botanical eco-prints and natural dyes on flowing natural fibres — straight from the runway."
+        image={hero.at(1600)}
+        imageSrcSet={hero.srcSet}
+        imageAlt="A model on the runway twirling a yellow, leaf-printed kaftan"
+        imageWidth={1600}
+        imageHeight={2400}
+        imagePosition="center 28%"
         scrollTarget="#looks"
         align="center"
       />
 
       <section className="statement statement--dark section-wrap">
         <Reveal as="p" className="eyebrow statement__eyebrow" variant="fade">
-          <span className="eyebrow__line" /> Botanical studies
+          <span className="eyebrow__line" /> On the runway
         </Reveal>
         <ScrollText text="A print is only half finished on the table. It is completed in motion — in light, in wind, in the way a leaf moves when you walk." />
       </section>
@@ -74,35 +75,50 @@ function RunwayPage() {
       <section className="lookbook section-wrap" id="looks" aria-labelledby="looks-title">
         <SectionHeading
           id="looks-title"
-          eyebrow="The lookbook"
+          eyebrow="Signature looks"
           lines={["Three looks,", <em key="em">one living print.</em>]}
           note="Each look carries its own leaves, its own colour and its own story. None of them can be made twice."
         />
         <div className="lookbook__grid">
-          {looks.map((look, index) => (
-            <Reveal as="figure" className={`look look--${index + 1}`} key={look.number} delay={index * 140}>
-              <ParallaxImage
-                className="look__image"
-                src={runwayImage}
-                alt={`${look.name}: ${look.detail}`}
-                width={1280}
-                height={960}
-                position={look.position}
-                strength={look.strength}
-              />
-              <figcaption>
-                <strong>{look.name}</strong>
-                <p>{look.detail}</p>
-              </figcaption>
-            </Reveal>
-          ))}
+          {looks.map((look, index) => {
+            const p = photo(look.id);
+            return (
+              <Reveal as="figure" className={`look look--${index + 1}`} key={look.id} delay={index * 140}>
+                <ParallaxImage
+                  className="look__image"
+                  src={p.src}
+                  srcSet={p.srcSet}
+                  sizes="(max-width: 760px) 50vw, 33vw"
+                  alt={`${look.name}: ${look.detail}`}
+                  width={p.width}
+                  height={p.height}
+                  position="center 30%"
+                  strength={look.strength}
+                />
+                <figcaption>
+                  <strong>{look.name}</strong>
+                  <p>{look.detail}</p>
+                </figcaption>
+              </Reveal>
+            );
+          })}
         </div>
       </section>
 
       <Marquee items={["Wearable art", "Limited edition", "Eco-printed", "Naturally dyed", "Natural fibres"]} tone="dark" />
 
-      <ExpandingImage src={heroImage} alt="A botanical-print dress worn in an open landscape" position="70% 40%" tone="dark">
-        <p className="eyebrow">Out in the open</p>
+      <section className="lookbook section-wrap" aria-labelledby="all-looks-title">
+        <SectionHeading
+          id="all-looks-title"
+          eyebrow="The full lookbook"
+          lines={["Every look", <em key="em">from the show.</em>]}
+          note="Browse by set, and tap any photo to see it full-screen."
+        />
+        <Lookbook />
+      </section>
+
+      <ExpandingImage src={expand.at(1600)} srcSet={expand.srcSet} alt="A model walking away in a long, leaf-printed golden silk drape" position="center 40%" tone="dark">
+        <p className="eyebrow">The finale</p>
         <h2>
           Made for the light,
           <br />
@@ -112,7 +128,7 @@ function RunwayPage() {
 
       <section className="runway-follow section-wrap">
         <Reveal className="runway-follow__image" variant="clip">
-          <img src={textileImage} alt="Close detail of fern prints on ivory cloth" loading="lazy" />
+          <img src={follow.src} srcSet={follow.srcSet} sizes="(max-width: 760px) 100vw, 40vw" alt="Eco-printed scarves hanging at the RALUI VALUI stall" loading="lazy" decoding="async" />
         </Reveal>
         <div className="runway-follow__copy">
           <SectionHeading eyebrow="See it first" lines={["Follow the", <em key="em">next collection.</em>]} />

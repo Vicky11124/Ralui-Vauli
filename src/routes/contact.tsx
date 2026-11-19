@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { ArrowRight, ArrowUpRight, Check, Gem, Handshake, Instagram, MapPin, MessageCircle, Phone, Plus } from "lucide-react";
 
-import textileImage from "@/assets/eco-art-textile.jpg";
+import { photo } from "@/lib/photos";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
 import { Reveal } from "@/components/site/motion";
 import { useSiteData } from "@/components/site/use-site";
@@ -22,6 +22,8 @@ export const Route = createFileRoute("/contact")({
   }),
   component: ContactPage,
 });
+
+const contactHero = photo("pr-img7315");
 
 const topics = [
   {
@@ -85,11 +87,12 @@ function ContactPage() {
         eyebrow="Get in touch"
         title={["Wear what", <em key="em">the earth remembers.</em>]}
         description="For custom pieces, collaborations and enquiries about any piece in the collection. We'd love to hear from you."
-        image={textileImage}
-        imageAlt="Botanical eco-printed cloth with fern and leaf impressions"
-        imageWidth={1024}
-        imageHeight={1280}
-        imagePosition="center 35%"
+        image={contactHero.at(1600)}
+        imageSrcSet={contactHero.srcSet}
+        imageAlt="The RALUI VALUI market stall with eco-printed clothing on display"
+        imageWidth={1600}
+        imageHeight={2133}
+        imagePosition="center 50%"
         scrollTarget="#topics"
         align="center"
       />

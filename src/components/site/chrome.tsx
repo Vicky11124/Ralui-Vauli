@@ -211,6 +211,8 @@ type PageHeroProps = {
   title: ReactNode[];
   description: string;
   image: string;
+  /** Optional responsive sources for the hero image. */
+  imageSrcSet?: string;
   imageAlt: string;
   imageWidth: number;
   imageHeight: number;
@@ -225,6 +227,7 @@ export function PageHero({
   title,
   description,
   image,
+  imageSrcSet,
   imageAlt,
   imageWidth,
   imageHeight,
@@ -240,6 +243,7 @@ export function PageHero({
       <ParallaxImage
         className="page-hero__image"
         src={image}
+        srcSet={imageSrcSet}
         alt={imageAlt}
         width={imageWidth}
         height={imageHeight}

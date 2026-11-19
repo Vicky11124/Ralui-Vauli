@@ -1,7 +1,6 @@
 import heroImage from "@/assets/eco-art-hero.jpg";
-import textileImage from "@/assets/eco-art-textile.jpg";
 import processImage from "@/assets/eco-art-process.jpg";
-import runwayImage from "@/assets/eco-art-runway.jpg";
+import { photo } from "@/lib/photos";
 
 import { BUSINESS } from "@/lib/site-data";
 
@@ -21,10 +20,10 @@ export type SitePage = {
 export const sitePages: SitePage[] = [
   { label: "Home", to: "/", teaser: "Where nature becomes wearable art", image: heroImage },
   { label: "Our story", to: "/our-story", teaser: "Rooted in nature, made by hand", image: processImage },
-  { label: "The art", to: "/the-art", teaser: "Eco-printing & natural dyeing", image: textileImage },
-  { label: "Runway", to: "/runway", teaser: "A living collection", image: runwayImage },
-  { label: "Collections", to: "/collections", teaser: "Made by nature, made to be yours", image: heroImage },
-  { label: "Contact", to: "/contact", teaser: "Wear what the earth remembers", image: textileImage },
+  { label: "The art", to: "/the-art", teaser: "Eco-printing & natural dyeing", image: photo("pr-img7278").at(1600) },
+  { label: "Runway", to: "/runway", teaser: "A living collection", image: photo("rw-0w3a0120").at(1600) },
+  { label: "Collections", to: "/collections", teaser: "Made by nature, made to be yours", image: photo("rw-0w3a9985").at(1600) },
+  { label: "Contact", to: "/contact", teaser: "Wear what the earth remembers", image: photo("pr-img7315").at(1600) },
 ];
 
 /** The page that follows `path` in the navigation order, wrapping back to Home. */

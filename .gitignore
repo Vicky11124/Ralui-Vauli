@@ -14,3 +14,6 @@ dist
 public/uploads
 !.env.example
 .vercel
+
+# Original full-size shoot photos (~1 GB). Web versions live in public/photos.
+public/collections_and_runway/

@@ -2,13 +2,10 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Feather, Leaf, MessageCircle, Sparkles } from "lucide-react";
 
-import heroImage from "@/assets/eco-art-hero.jpg";
-import textileImage from "@/assets/eco-art-textile.jpg";
-import processImage from "@/assets/eco-art-process.jpg";
-import runwayImage from "@/assets/eco-art-runway.jpg";
 import { NextChapter, PageHero, SectionHeading, SitePage } from "@/components/site/chrome";
 import { Reveal } from "@/components/site/motion";
 import { useSiteData } from "@/components/site/use-site";
+import { photo } from "@/lib/photos";
 import { BUSINESS, CATEGORIES, categoryLabel, isCategory, whatsappLink, type CategoryId, type Piece } from "@/lib/site-data";
 
 const PAGE_SIZE = 9;
@@ -45,9 +42,9 @@ const chapters = [
     category: "clothing" as const,
     text: "Botanical eco-printed dresses and clothing in natural fibres. Flowing silhouettes that carry the full shape of the leaf, made to be worn and loved for years.",
     pieces: ["Dresses", "Tunics", "Layering pieces"],
-    image: heroImage,
-    alt: "A flowing ivory dress printed with botanical leaves, worn in an open landscape",
-    position: "68% 40%",
+    image: photo("rw-0w3a0050").src,
+    alt: "An ivory waistcoat and long leaf-printed skirt on the runway",
+    position: "center 22%",
   },
   {
     number: "02",
@@ -56,9 +53,9 @@ const chapters = [
     category: "scarves" as const,
     text: "Handcrafted silk scarves printed with leaves and flowers. Light, luminous and personal — a small piece of the natural world to carry with you.",
     pieces: ["Silk scarves", "Stoles", "Gifting"],
-    image: processImage,
-    alt: "Hands laying leaves onto natural cloth before printing",
-    position: "center 55%",
+    image: photo("pr-img7290").src,
+    alt: "Eco-printed scarves hanging at the market stall",
+    position: "center 45%",
   },
   {
     number: "03",
@@ -67,9 +64,9 @@ const chapters = [
     category: "shawls" as const,
     text: "Shawls coloured with natural dyes, in warm earth tones and soft greens. Comfortable, textured and made to layer through every season.",
     pieces: ["Shawls", "Wraps", "Earth tones"],
-    image: runwayImage,
-    alt: "A rust-toned naturally dyed shawl worn over an ivory botanical dress",
-    position: "88% 35%",
+    image: photo("rw-0w3a0172").src,
+    alt: "A long, leaf-printed golden silk drape worn on the runway",
+    position: "center 28%",
   },
   {
     number: "04",
@@ -78,8 +75,8 @@ const chapters = [
     category: "textiles" as const,
     text: "Exclusive eco-printed textiles on silk, cotton and linen — for makers, interiors and anyone who wants the print itself.",
     pieces: ["Silk", "Cotton", "Linen"],
-    image: textileImage,
-    alt: "Folded and rolled cloth printed with fern and leaf impressions",
+    image: photo("pr-img7278").src,
+    alt: "Close-up of eco-printed fabric with leaf impressions",
     position: "center",
   },
   {
@@ -89,9 +86,20 @@ const chapters = [
     category: "limited" as const,
     text: "Statement pieces made in very small numbers — layered in sage, ivory and earth. Each one is the only one of its kind.",
     pieces: ["Occasion wear", "Layered looks", "Collector pieces"],
-    image: runwayImage,
-    alt: "Three botanical-print looks in sage, ivory and rust",
-    position: "center 30%",
+    image: photo("rw-0w3a0154").src,
+    alt: "A gathered column with a golden leaf-printed drape",
+    position: "center 22%",
+  },
+  {
+    number: "06",
+    name: "Accessories & home",
+    kind: "Small pieces, big character",
+    category: "accessories" as const,
+    text: "Eco-printed cushion covers, fabric-bound journals and scrunchies — the same botanical prints, made for everyday life and thoughtful gifting.",
+    pieces: ["Cushion covers", "Journals", "Scrunchies"],
+    image: photo("pr-img7271").src,
+    alt: "A cushion cover printed with plum-coloured leaves",
+    position: "center 40%",
   },
 ];
 
@@ -101,6 +109,8 @@ const promises = [
   { icon: Sparkles, title: "One of a kind", text: "No two leaves are alike, so no two prints are. Your piece is yours alone." },
 ];
 
+const heroPhoto = photo("rw-0w3a9985");
+
 function CollectionsPage() {
   return (
     <SitePage>
@@ -109,11 +119,12 @@ function CollectionsPage() {
         eyebrow="Wearable botanical art"
         title={["Made by nature.", <em key="em">Made to be yours.</em>]}
         description="Botanical eco-printed clothing, silk scarves, naturally dyed shawls, exclusive textiles and limited-edition wearable art — all on natural fibres."
-        image={heroImage}
-        imageAlt="A flowing ivory botanical-print dress in an open landscape"
-        imageWidth={1920}
-        imageHeight={1200}
-        imagePosition="center 42%"
+        image={heroPhoto.at(1600)}
+        imageSrcSet={heroPhoto.srcSet}
+        imageAlt="A model in a flowing ivory cape-sleeve outfit with leaf prints on the runway"
+        imageWidth={1600}
+        imageHeight={2400}
+        imagePosition="center 24%"
         scrollTarget="#pieces"
       />
 
@@ -315,8 +326,8 @@ function Chapters() {
       <div className="chapters__intro section-wrap">
         <SectionHeading
           id="edits-title"
-          eyebrow="Five collections"
-          lines={["One practice,", <em key="em">five ways to wear it.</em>]}
+          eyebrow="Six collections"
+          lines={["One practice,", <em key="em">six ways to live with it.</em>]}
         />
       </div>
       <div className="chapters__body">

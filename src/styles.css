@@ -684,11 +684,8 @@ html.js .reveal--mask:not(.is-visible) .split-lines__line { transform: translate
 .look--2 { margin-top: 6rem; }
 .look--3 { margin-top: 2.5rem; }
 .look__image { aspect-ratio: 0.62; }
-.look__image img { scale: 1.45; transition: scale 1200ms var(--ease-out); }
-.look--1 .look__image img { transform-origin: 18% 10%; }
-.look--2 .look__image img { transform-origin: 50% 10%; }
-.look--3 .look__image img { transform-origin: 82% 10%; }
-.look:hover .look__image img { scale: 1.5; }
+.look__image img { transition: scale 1200ms var(--ease-out); }
+.look:hover .look__image img { scale: 1.04; }
 .look figcaption { padding-top: 1.1rem; }
 .look figcaption span { color: var(--warm-earth); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.14em; }
 .look figcaption strong { display: block; margin-top: 0.35rem; font-family: var(--font-editorial); font-size: 1.9rem; font-weight: 400; }
@@ -1115,6 +1112,46 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
   .admin-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
   .admin-card__actions button:first-child { flex: 1; }
   .admin-head h1 { font-size: 2rem; }
+}
+
+/* --- Runway: full lookbook + lightbox ---------------------------------------------------------- */
+.lookbook-full { max-width: 100rem; margin: 0 auto; }
+.lookbook-full__tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.lookbook-full__tabs button { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border: 1px solid oklch(0.97 0.014 89 / 22%); color: var(--soft-ivory); background: transparent; font: inherit; font-size: 0.74rem; letter-spacing: 0.03em; cursor: pointer; transition: border-color 250ms ease, background-color 250ms ease, color 250ms ease; }
+.lookbook-full__tabs button span { opacity: 0.6; font-size: 0.66rem; }
+.lookbook-full__tabs button:hover { border-color: oklch(0.97 0.014 89 / 60%); }
+.lookbook-full__tabs button.is-active { border-color: var(--soft-ivory); color: var(--olive-ink); background: var(--soft-ivory); }
+.lookbook-full__note { margin: 1.2rem 0 0; color: oklch(0.97 0.014 89 / 68%); font-family: var(--font-editorial); font-size: 1.2rem; font-style: italic; }
+.lookbook-full__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.5rem, 1.2vw, 1rem); margin: 2rem 0 0; padding: 0; list-style: none; }
+.lookbook-full__grid li { animation: piece-in 700ms var(--ease-out) both; }
+.lookbook-full__grid button { display: block; width: 100%; aspect-ratio: 2 / 3; padding: 0; overflow: clip; border: 0; background: oklch(0.26 0.018 113); cursor: zoom-in; }
+.lookbook-full__grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--ease-out), opacity 300ms ease; }
+.lookbook-full__grid button:hover img { transform: scale(1.04); }
+.lookbook-full__grid button:focus-visible { outline: 2px solid var(--warm-earth); outline-offset: 2px; }
+.lookbook-full__more { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; margin-top: 2.5rem; }
+.lookbook-full__more span { color: oklch(0.97 0.014 89 / 60%); font-size: 0.72rem; }
+.lookbook-full__more .cta-band__button { margin-top: 0; border: 0; cursor: pointer; font-family: inherit; }
+
+.lightbox { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; padding: 3.5rem 4.5rem; background: oklch(0.12 0.012 113 / 94%); animation: page-in 250ms ease both; }
+.lightbox__image { max-width: 100%; max-height: calc(100svh - 7rem); object-fit: contain; box-shadow: 0 2rem 4rem rgb(0 0 0 / 40%); animation: piece-in 400ms var(--ease-out) both; }
+.lightbox button { display: grid; place-items: center; border: 0; color: var(--soft-ivory); background: oklch(0.97 0.014 89 / 10%); cursor: pointer; transition: background-color 200ms ease; }
+.lightbox button:hover { background: oklch(0.97 0.014 89 / 22%); }
+.lightbox button svg { width: 1.4rem; height: 1.4rem; }
+.lightbox__close { position: absolute; top: 1rem; right: 1rem; width: 2.75rem; height: 2.75rem; border-radius: 999px; }
+.lightbox__nav { position: absolute; top: 50%; width: 3rem; height: 3rem; border-radius: 999px; translate: 0 -50%; }
+.lightbox__nav--prev { left: 1rem; }
+.lightbox__nav--next { right: 1rem; }
+.lightbox__caption { position: absolute; bottom: 1rem; left: 50%; display: flex; gap: 1rem; margin: 0; color: oklch(0.97 0.014 89 / 80%); font-family: var(--font-editorial); font-size: 1.05rem; font-style: italic; white-space: nowrap; translate: -50% 0; }
+.lightbox__caption span { font-family: var(--font-sans); font-size: 0.72rem; font-style: normal; letter-spacing: 0.08em; opacity: 0.7; }
+
+@media (max-width: 1050px) {
+  .lookbook-full__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 760px) {
+  .lookbook-full__grid { grid-template-columns: 1fr 1fr; }
+  .lightbox { padding: 3.5rem 0.5rem 3.5rem; }
+  .lightbox__nav { top: auto; bottom: 0.6rem; translate: none; width: 2.6rem; height: 2.6rem; }
+  .lightbox__caption { bottom: 1.1rem; }
 }
 
 @layer base {
