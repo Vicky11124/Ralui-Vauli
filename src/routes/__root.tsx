@@ -99,7 +99,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "RALUI VALUI: premium handmade textiles, botanical eco-printing and natural dyeing on silk, cotton and linen. Ukhrul & Dimapur.",
+          "RALUI VALUI: premium handmade textiles, botanical eco-printing and natural dyeing on silk, cotton and linen. Manipur & Nagaland.",
       },
       { property: "og:title", content: "RALUI VALUI — Wearable Botanical Art" },
       {

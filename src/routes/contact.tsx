@@ -128,7 +128,7 @@ function ContactPage() {
       <Composer topic={topic} onTopicChange={setTopic} />
 
       <section className="visit section-wrap" aria-labelledby="visit-title">
-        <SectionHeading id="visit-title" eyebrow="Find us" lines={["Visit us in", <em key="em">Ukhrul & Dimapur.</em>]} />
+        <SectionHeading id="visit-title" eyebrow="Find us" lines={["Visit us in", <em key="em">Manipur & Nagaland.</em>]} />
         <div className="visit__grid">
           {BUSINESS.offices.map((office, index) => (
             <Reveal className="visit__card" key={office.label} delay={index * 120}>

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "RALUI VALUI: botanical eco-printed clothing, silk scarves, naturally dyed shawls and limited-edition wearable art on natural fibres. Ukhrul & Dimapur.",
+          "RALUI VALUI: botanical eco-printed clothing, silk scarves, naturally dyed shawls and limited-edition wearable art on natural fibres. Manipur & Nagaland.",
       },
       { property: "og:title", content: "RALUI VALUI — Wearable Botanical Art" },
       {
@@ -79,7 +79,7 @@ function Index() {
           </div>
         </div>
         <p className="hero__index">
-          <span /> Handmade in Ukhrul & Dimapur
+          <span /> Handmade in Manipur & Nagaland
         </p>
         <a className="hero__scroll" href="#collections" aria-label="Scroll to collections">
           <ArrowDown aria-hidden="true" />

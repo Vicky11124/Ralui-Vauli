@@ -15,7 +15,7 @@ export const Route = createFileRoute("/our-story")({
       {
         name: "description",
         content:
-          "RALUI VALUI is a nature-inspired textile and clothing brand from Ukhrul and Dimapur, founded by Ralui Valui — botanical eco-printing and natural dyeing on natural fibres.",
+          "RALUI VALUI is a nature-inspired textile and clothing brand from Manipur and Nagaland, founded by Ralui Valui — botanical eco-printing and natural dyeing on natural fibres.",
       },
       { property: "og:title", content: "Our story — RALUI VALUI" },
     ],
@@ -49,7 +49,7 @@ function StoryPage() {
         index="Our story"
         eyebrow="The heart of RALUI VALUI"
         title={["Fashion,", <>rooted in <em>nature.</em></>]}
-        description="A nature-inspired textile and clothing brand from Ukhrul and Dimapur — specialising in botanical eco-printing, natural dyeing and handcrafted wearable art."
+        description="A nature-inspired textile and clothing brand from Manipur and Nagaland — specialising in botanical eco-printing, natural dyeing and handcrafted wearable art."
         image={processImage}
         imageAlt="Hands carefully placing leaves onto natural cloth"
         imageWidth={1024}
@@ -84,7 +84,7 @@ function StoryPage() {
             dresses, silk scarves, naturally dyed shawls, exclusive textiles and limited-edition pieces.
           </Reveal>
           <Reveal as="a" className="maker__place" href={BUSINESS.offices[0].mapsUrl} target="_blank" rel="noreferrer" delay={300}>
-            <MapPin aria-hidden="true" /> Made in Ukhrul & Dimapur
+            <MapPin aria-hidden="true" /> Made in Manipur & Nagaland
           </Reveal>
         </div>
       </section>
