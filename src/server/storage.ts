@@ -20,7 +20,16 @@ const DATA_PREFIX = "data/site-";
 
 function useBlob() {
   loadLocalEnv();
-  return Boolean(process.env["BLOB_READ_WRITE_TOKEN"]);
+  if (!process.env["BLOB_READ_WRITE_TOKEN"]) {
+    // Stores connected with a custom prefix expose e.g. MY_STORE_READ_WRITE_TOKEN instead;
+    // the Blob SDK only reads BLOB_READ_WRITE_TOKEN, so adopt any blob read-write token we find.
+    const key = Object.keys(process.env).find(
+      (k) => k.endsWith("_READ_WRITE_TOKEN") && process.env[k]?.startsWith("vercel_blob_rw_"),
+    );
+    if (key) process.env["BLOB_READ_WRITE_TOKEN"] = process.env[key];
+  }
+  // Newer stores connect with BLOB_STORE_ID + Vercel OIDC instead of a read-write token.
+  return Boolean(process.env["BLOB_READ_WRITE_TOKEN"] || process.env["BLOB_STORE_ID"]);
 }
 
 export class StorageNotConfiguredError extends Error {
