@@ -18,7 +18,7 @@ import { loadLocalEnv } from "./env";
 
 const DATA_PREFIX = "data/site-";
 
-function useBlob() {
+export function useBlob() {
   loadLocalEnv();
   if (!process.env["BLOB_READ_WRITE_TOKEN"]) {
     // Stores connected with a custom prefix expose e.g. MY_STORE_READ_WRITE_TOKEN instead;

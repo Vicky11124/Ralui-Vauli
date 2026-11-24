@@ -44,7 +44,8 @@ export const getAdminSession = createServerFn({ method: "GET" }).handler(async (
   const { isAdminConfigured, isSignedIn } = await import("@/server/auth");
   const { loadLocalEnv } = await import("@/server/env");
   loadLocalEnv();
-  const storage = process.env["BLOB_READ_WRITE_TOKEN"] ? "blob" : process.env["VERCEL"] ? "missing" : "local";
+  const { useBlob } = await import("@/server/storage");
+  const storage = useBlob() ? "blob" : process.env["VERCEL"] ? "missing" : "local";
   return { configured: isAdminConfigured(), signedIn: isSignedIn(), storage } as const;
 });
 
